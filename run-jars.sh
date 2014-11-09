@@ -9,7 +9,7 @@ LOCAL_LIB=$(pwd)/ivy/lib
 LOG4J=-Dlog4j.configuration=file:etc/log4j.properties
 
 # path to your jar file here. Default is the maven artifact in your local repo
-export JAR_PATH="bin/streamcorpus-dexter-0.1-SNAPSHOT.jar"
+export JAR_PATH="~/.m2/repository/de/l3s/streamcorpus/streamcorpus-dexter/0.1-SNAPSHOT/streamcorpus-dexter-0.1-SNAPSHOT.jar"
 
 for jarf in $LIB/*.jar
 do
