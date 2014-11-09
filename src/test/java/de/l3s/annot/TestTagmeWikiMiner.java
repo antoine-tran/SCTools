@@ -43,7 +43,7 @@ public class TestTagmeWikiMiner {
 	
 	@Before
 	public void prepareParams() {
-		String confFile = "dexter-conf.xml";
+		// String confFile = "dexter-conf.xml";
 		dexterParams = DexterParams.getInstance();
 	}
 

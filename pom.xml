@@ -84,10 +84,10 @@
 						<phase>validate</phase>
 						<id>install-dexter-core</id>
 						<configuration>
-							<file>${project.basedir}/lib/dexter-core-2.1.0.jar</file>
+							<file>${project.basedir}/lib/dexter-core-2.1.0-recompiled.jar</file>
 							<groupId>it.cnr.isti.hpc</groupId>
 							<artifactId>dexter-core</artifactId>
-							<version>2.1.0</version>
+							<version>2.1.0.1</version>
 							<packaging>jar</packaging>
 							<generatePom>true</generatePom>
 						</configuration>
@@ -168,6 +168,24 @@
 						</configuration>
 						<goals>
 							<goal>install-file</goal>
+						</goals>
+					</execution>
+					<!-- <execution> <phase>validate</phase> <id>install-old-picard</id> 
+						<configuration> <file>${project.basedir}/lib/sam-1.108.jar</file> <groupId>pi.picard</groupId> 
+						<artifactId>sam-jdk</artifactId> <version>1.108</version> <packaging>jar</packaging> 
+						<generatePom>true</generatePom> </configuration> <goals> <goal>install-file</goal> 
+						</goals> </execution> -->
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>download-licenses</id>
+						<goals>
+							<goal>download-licenses</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -295,7 +313,7 @@
 					<groupId>org.mortbay.jetty</groupId>
 				</exclusion>
 			</exclusions>
-			<version>2.1.0</version>
+			<version>2.1.0.1</version>
 		</dependency>
 
 		<dependency>
@@ -309,6 +327,9 @@
 			<artifactId>boilerpipe</artifactId>
 			<version>1.1.0</version>
 		</dependency>
+
+		<!-- <dependency> <groupId>pi.picard</groupId> <artifactId>sam-jdk</artifactId> 
+			<version>1.108</version> </dependency> -->
 
 		<dependency>
 			<groupId>streamcorpus</groupId>
