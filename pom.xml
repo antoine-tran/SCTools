@@ -97,6 +97,21 @@
 					</execution>
 					<execution>
 						<phase>validate</phase>
+						<id>install-dexter-spotters</id>
+						<configuration>
+							<file>${project.basedir}/lib/dexter-spotters-2.0.0.jar</file>
+							<groupId>it.cnr.isti.hpc</groupId>
+							<artifactId>dexter-spotters</artifactId>
+							<version>2.0.0</version>
+							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
+						</configuration>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+					</execution>
+					<execution>
+						<phase>validate</phase>
 						<id>install-streamcorpus</id>
 						<configuration>
 							<file>${project.basedir}/lib/streamcorpus.jar</file>
@@ -295,6 +310,12 @@
 			<groupId>it.cnr.isti.hpc</groupId>
 			<artifactId>dexter-wikiminer</artifactId>
 			<version>2.1.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>it.cnr.isti.hpc</groupId>
+			<artifactId>dexter-spotters</artifactId>
+			<version>2.0.0</version>
 		</dependency>
 
 		<dependency>
