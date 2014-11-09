@@ -4,6 +4,8 @@
 
 #!/bin/sh
 
+rm libst/*
+
 mvn install -DskipTests
 rm libst/hadoop*
 rm libst/jetty*
