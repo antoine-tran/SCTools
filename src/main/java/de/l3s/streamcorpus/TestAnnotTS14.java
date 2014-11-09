@@ -3,17 +3,11 @@ package de.l3s.streamcorpus;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Set;
-
-import ilps.hadoop.StreamItemWritable;
-import ilps.hadoop.ThriftFileInputFormat;
 import it.cnr.isti.hpc.dexter.StandardTagger;
 import it.cnr.isti.hpc.dexter.Tagger;
 import it.cnr.isti.hpc.dexter.common.MultifieldDocument;
 import it.cnr.isti.hpc.dexter.disambiguation.Disambiguator;
 import it.cnr.isti.hpc.dexter.entity.EntityMatchList;
-import it.cnr.isti.hpc.dexter.label.IdHelper;
-import it.cnr.isti.hpc.dexter.label.IdHelperFactory;
 import it.cnr.isti.hpc.dexter.rest.domain.AnnotatedDocument;
 import it.cnr.isti.hpc.dexter.rest.domain.AnnotatedSpot;
 import it.cnr.isti.hpc.dexter.spotter.Spotter;
@@ -31,23 +25,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.compress.BZip2Codec;
-import org.apache.hadoop.io.compress.CompressionCodec;
-import org.apache.hadoop.io.compress.GzipCodec;
-import org.apache.hadoop.io.compress.Lz4Codec;
-import org.apache.hadoop.io.compress.SnappyCodec;
-import org.apache.hadoop.mapreduce.InputFormat;
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.OutputFormat;
-import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.Mapper.Context;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -59,11 +37,8 @@ import org.slf4j.LoggerFactory;
 
 import de.l3s.streamcorpus.mapreduce.AnnotTS14;
 
-import streamcorpus.Sentence;
 import streamcorpus.StreamItem;
-import streamcorpus.Token;
-import tuan.hadoop.conf.JobConfig;
-import tuan.io.FileUtility;
+
 import tuan.terrier.Files;
 import tuan.terrier.HadoopDistributedFileSystem;
 
@@ -76,8 +51,6 @@ public class TestAnnotTS14 extends Configured implements Tool {
 
 	private static final String DEXTER_CONF_OPT = "dexter";
 	private static final String DEXTER_CONF_PATH_HDFS = "dexter-conf.path";
-
-	private static final IdHelper helper = IdHelperFactory.getStdIdHelper();
 
 	// Each JVM has only one dexterParam instance
 	private DexterParams dexterParams;

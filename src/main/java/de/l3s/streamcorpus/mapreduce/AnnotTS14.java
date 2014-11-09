@@ -18,8 +18,7 @@ import it.cnr.isti.hpc.dexter.common.MultifieldDocument;
 import it.cnr.isti.hpc.dexter.disambiguation.Disambiguator;
 import it.cnr.isti.hpc.dexter.entity.EntityMatch;
 import it.cnr.isti.hpc.dexter.entity.EntityMatchList;
-import it.cnr.isti.hpc.dexter.label.IdHelper;
-import it.cnr.isti.hpc.dexter.label.IdHelperFactory;
+
 import it.cnr.isti.hpc.dexter.rest.domain.AnnotatedDocument;
 import it.cnr.isti.hpc.dexter.rest.domain.AnnotatedSpot;
 import it.cnr.isti.hpc.dexter.rest.domain.Tagmeta;
@@ -59,7 +58,7 @@ public class AnnotTS14 extends JobConfig implements Tool {
 	private static final String DEXTER_CONF_OPT = "dexter";
 	private static final String DEXTER_CONF_PATH_HDFS = "dexter-conf.path";
 	
-	private static final IdHelper helper = IdHelperFactory.getStdIdHelper();
+	// private static final IdHelper helper = IdHelperFactory.getStdIdHelper();
 
 	
 	private static final class MyMapper 
@@ -227,9 +226,9 @@ public class AnnotTS14 extends JobConfig implements Tool {
 							.getFrequency(), em.getId(), em.getFrequency(),
 					em.getCommonness(), em.getScore());
 			spot.setField(em.getSpot().getField().getName());
-			if (addWikiNames) {
+			/*if (addWikiNames) {
 				spot.setWikiname(helper.getLabel(em.getId()));
-			}
+			}*/
 
 			spots.add(spot);
 		}
