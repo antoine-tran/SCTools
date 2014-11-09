@@ -3,7 +3,14 @@
 # the documentation on http://antoine-tran.github.io/hedera/wikirevision.html
 
 #!/bin/sh
-LIB=$(pwd)/libat
+
+mvn install -DskipTests
+rm libst/hadoop*
+rm libst/jetty*
+rm libst/jasper*
+rm libst/jersey*
+
+LIB=$(pwd)/libst
 LOCAL_LIB=$(pwd)/ivy/lib
 
 LOG4J=-Dlog4j.configuration=file:etc/log4j.properties
