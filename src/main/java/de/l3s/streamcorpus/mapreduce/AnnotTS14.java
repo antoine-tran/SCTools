@@ -59,7 +59,7 @@ public class AnnotTS14 extends JobConfig implements Tool {
 	private static final String DEXTER_CONF_OPT = "dexter";
 	private static final String DEXTER_CONF_PATH_HDFS = "dexter-conf.path";
 	
-	private static final IdHelper helper = IdHelperFactory.getStdIdHelper();;
+	private static final IdHelper helper = IdHelperFactory.getStdIdHelper();
 
 	
 	private static final class MyMapper 
@@ -198,7 +198,7 @@ public class AnnotTS14 extends JobConfig implements Tool {
 		return 0;
 	}
 
-	private static MultifieldDocument parseDocument(String text, String format) {
+	public static MultifieldDocument parseDocument(String text, String format) {
 		Tagmeta.DocumentFormat df = Tagmeta.getDocumentFormat(format);
 		MultifieldDocument doc = null;
 		if (df == Tagmeta.DocumentFormat.TEXT) {
@@ -238,7 +238,7 @@ public class AnnotTS14 extends JobConfig implements Tool {
 		adoc.setAnnotatedDocument(annotatedDocument);
 	}
 	
-	private static MultifieldDocument getAnnotatedDocument(AnnotatedDocument adoc,
+	public static MultifieldDocument getAnnotatedDocument(AnnotatedDocument adoc,
 			EntityMatchList eml) {
 		Collections.sort(eml, new EntityMatch.SortByPosition());
 
