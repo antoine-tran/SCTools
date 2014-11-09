@@ -16,7 +16,7 @@ LOCAL_LIB=$(pwd)/ivy/lib
 LOG4J=-Dlog4j.configuration=file:etc/log4j.properties
 
 # path to your jar file here. Default is the maven artifact in your local repo
-export JAR_PATH="~/.m2/repository/de/l3s/streamcorpus/streamcorpus-dexter/0.1-SNAPSHOT/streamcorpus-dexter-0.1-SNAPSHOT.jar"
+export JAR_PATH="target/streamcorpus-dexter-0.1-SNAPSHOT.jar"
 
 for jarf in $LIB/*.jar
 do
@@ -56,4 +56,4 @@ then
   TERRIER_ETC=$TERRIER_HOME/etc
 fi
 
-hadoop jar $1 $2 -libjars ${HCLPDA} -D terrier.home="$TERRIER_HOME" $LOG4J -D mapred.output.compress=true -D mapred.output.compression.type=BLOCK -D mapred.output.compression.codec=org.apache.hadoop.io.compress.BZip2Codec -D mapred.compress.map.output -D mapred.map.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec -D mapred.task.timeout=1200000 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13} ${14} ${15} ${16} ${17} ${18} ${19} ${20}
+hadoop jar target/streamcorpus-dexter-0.1-SNAPSHOT.jar $1 -libjars ${HCLPDA} -D terrier.home="$TERRIER_HOME" $LOG4J -D mapred.output.compress=true -D mapred.output.compression.type=BLOCK -D mapred.output.compression.codec=org.apache.hadoop.io.compress.BZip2Codec -D mapred.compress.map.output -D mapred.map.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec -D mapred.task.timeout=1200000 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13} ${14} ${15} ${16} ${17} ${18} ${19} ${20}
