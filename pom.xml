@@ -329,6 +329,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>it.cnr.isti.hpc</groupId>
 			<artifactId>dexter-common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
