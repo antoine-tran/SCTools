@@ -206,7 +206,7 @@
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<testOutputDirectory>bin/test-classes</testOutputDirectory>
-		<finalName>${articfactId}-${project.version}</finalName>
+		<finalName>${artifactId}-${project.version}</finalName>
 		<outputDirectory>bin/classes</outputDirectory>
 	</build>
 
