@@ -142,7 +142,7 @@
 					</execution>
 					<execution>
 						<phase>validate</phase>
-						<id>install-dexter-tagme</id>
+						<id>install-hpc-utils</id>
 						<configuration>
 							<file>${project.basedir}/lib/hpc-utils-0.0.7.jar</file>
 							<groupId>it.cnr.isti.hpc</groupId>
