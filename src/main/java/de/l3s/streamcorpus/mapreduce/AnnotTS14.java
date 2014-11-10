@@ -42,6 +42,8 @@ import org.slf4j.LoggerFactory;
 
 import tuan.hadoop.conf.JobConfig;
 import tuan.hadoop.io.IntFloatArrayListWritable;
+import tuan.terrier.Files;
+import tuan.terrier.HadoopDistributedFileSystem;
 
 /**
  * Annotate the StreamCorpus dataset with Dexter
@@ -82,6 +84,12 @@ public class AnnotTS14 extends JobConfig implements Tool {
 		protected void setup(Context context) throws IOException,
 				InterruptedException {
 			Configuration conf = context.getConfiguration();
+			
+			// register HDFS for each JVM in the datanode
+			if (!Files.hasFileSystemScheme(HadoopDistributedFileSystem.HDFS_SCHEME)) {
+				Files.addFileSystemCapability(new HadoopDistributedFileSystem(conf));	
+			}
+			
 			if (dexterParams == null) {
 				String dexterConf = System.getProperty("conf");
 				if (dexterConf == null) {
