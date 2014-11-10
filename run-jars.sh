@@ -6,7 +6,7 @@
 
 rm libst/*
 
-mvn install -DskipTests
+mvn validate install -DskipTests
 rm libst/hadoop*
 rm libst/jetty*
 rm libst/jasper*
