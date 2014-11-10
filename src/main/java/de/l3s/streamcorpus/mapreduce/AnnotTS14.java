@@ -97,7 +97,7 @@ public class AnnotTS14 extends JobConfig implements Tool {
 			addWikinames = new Boolean("true");
 
 			entitiesToAnnotate = new Integer(50);
-			minConfidence = Double.parseDouble("0.2");
+			minConfidence = Double.parseDouble("0.1");
 			
 			if (ned == null) {
 				ned = conf.get(DISAMB_HDFS_OPT);
