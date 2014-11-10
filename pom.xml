@@ -352,6 +352,18 @@
 		</dependency>
 		
 		<dependency>
+			<groupId>it.unimi.dsi</groupId>
+			<artifactId>sux4j</artifactId>
+			<version>3.0.8</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-io</artifactId>
+					<groupId>commons-io</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
 			<groupId>it.cnr.isti.hpc</groupId>
 			<artifactId>hpc-utils</artifactId>
 			<version>0.0.7</version>
