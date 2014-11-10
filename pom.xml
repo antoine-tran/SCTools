@@ -334,11 +334,18 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.mapdb</groupId>
+			<artifactId>mapdb</artifactId>
+			<version>0.9.4</version>
+		</dependency>
+
+		
+		<dependency>
 			<groupId>org.jodd</groupId>
 			<artifactId>jodd</artifactId>
 			<version>3.2.6</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>it.unimi.dsi</groupId>
 			<artifactId>fastutil</artifactId>
@@ -350,7 +357,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>it.unimi.dsi</groupId>
 			<artifactId>sux4j</artifactId>
@@ -362,7 +369,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>it.cnr.isti.hpc</groupId>
 			<artifactId>hpc-utils</artifactId>
