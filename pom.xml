@@ -142,6 +142,21 @@
 					</execution>
 					<execution>
 						<phase>validate</phase>
+						<id>install-dexter-tagme</id>
+						<configuration>
+							<file>${project.basedir}/lib/hpc-utils-0.0.7.jar</file>
+							<groupId>it.cnr.isti.hpc</groupId>
+							<artifactId>hpc-utils</artifactId>
+							<version>0.0.7</version>
+							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
+						</configuration>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+					</execution>
+					<execution>
+						<phase>validate</phase>
 						<id>install-dexter-wikiminer</id>
 						<configuration>
 							<file>${project.basedir}/lib/dexter-wikiminer-2.1.0.jar</file>
@@ -323,7 +338,12 @@
 			<artifactId>jodd</artifactId>
 			<version>3.2.6</version>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>it.cnr.isti.hpc</groupId>
+			<artifactId>hpc-utils</artifactId>
+			<version>0.0.7</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.dmilne</groupId>
