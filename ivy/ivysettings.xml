@@ -1,0 +1,31 @@
+<ivysettings>
+  <settings defaultResolver="chain-example"/>
+  <resolvers>
+    <chain name="chain-example">
+      <ibiblio name="ibiblio" m2compatible="true" checkconsistency="false" pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
+	  <!--for tuan4j -->
+	  <ibiblio name="tuan4j" m2compatible="true" root="https://raw.github.com/antoine-tran/maven-repo/master/releases/"/>
+	  
+	  <!-- Oracle maven repo -->
+	  <ibiblio name="oracle" m2compatible="true" root="http://download.oracle.com/maven/"/>
+	  
+	  <!-- Cloudera Public -->
+	  <ibiblio name="oracle" m2compatible="true" root="https://repository.cloudera.com/artifactory/public"/>
+	  
+	  <!-- Eclipse maven repo -->
+ 	  <ibiblio name="eclipselink" m2compatible="true" root="http://download.eclipse.org/rt/eclipselink/maven.repo"/>
+	  
+      <filesystem name="libraries">
+        <artifact pattern="${basedir}/ivy/local-repo/[artifact]-[revision].[ext]" />
+      </filesystem>
+
+      <!-- for *publishing* artifacts for local testing builds -->
+      <filesystem name="local-m2-publish-debian" m2compatible="true">
+        <artifact pattern="${user.home}/Developer/maven-repo/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
+      </filesystem>
+      <filesystem name="local-m2-publish-mac" m2compatible="true">
+        <artifact pattern="${user.home}/Apps/maven-repo/[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"/>
+      </filesystem>
+    </chain>
+  </resolvers>
+</ivysettings>
