@@ -39,6 +39,7 @@
     <dependency org="com.google.code.gson" name="gson" rev="2.3" conf="*->*,!sources,!javadoc" />
     <dependency org="junit" name="junit" rev="4.11" conf="test->*,!sources,!javadoc" />
     <dependency org="com.moparisthebest" name="junidecode" rev="0.1.1" conf="*->*,!sources,!javadoc" />
+    <dependency org="it.cnr.isti.hpc" name="h-dexter" rev="0.1-SNAPSHOT" conf="*->*,!sources,!javadoc" />
     
     <!-- TODO: Add Christian's Boilerpipe lib here -->
     
