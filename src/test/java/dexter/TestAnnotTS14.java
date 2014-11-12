@@ -42,7 +42,7 @@ import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.l3s.streamcorpus.mapreduce.AnnotTS14;
+import de.l3s.streamcorpus.mapreduce.Annotation;
 import streamcorpus.StreamItem;
 import tuan.terrier.Files;
 import tuan.terrier.HadoopDistributedFileSystem;

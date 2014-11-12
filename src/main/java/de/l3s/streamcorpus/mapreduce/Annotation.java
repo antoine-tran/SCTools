@@ -5,7 +5,9 @@ package de.l3s.streamcorpus.mapreduce;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import ilps.hadoop.StreamItemWritable;
 import it.cnr.isti.hpc.dexter.hadoop.AnnotateMapper;
@@ -27,11 +29,11 @@ import tuan.hadoop.io.IntFloatArrayListWritable;
  * @author tuan
  *
  */
-public class AnnotTS14 extends HadoopAnnotation implements Tool {
+public class Annotation extends HadoopAnnotation implements Tool {
 
-	private static Logger LOG = LoggerFactory.getLogger(AnnotTS14.class);
+	private static Logger LOG = LoggerFactory.getLogger(Annotation.class);
 
-	private static final class MyMapper 
+	public static final class MyMapper 
 			extends AnnotateMapper<Text, StreamItemWritable, 
 			Text, IntFloatArrayListWritable> {
 
@@ -89,8 +91,27 @@ public class AnnotTS14 extends HadoopAnnotation implements Tool {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		// add extra arguments about the classes
+		List<String> newArgs = new ArrayList<>();
+		for (String a : args) newArgs.add(a);
+		newArgs.add("-informat");
+		newArgs.add("ilps.hadoop.ThriftFileInputFormat");
+		newArgs.add("-outformat");
+		newArgs.add("org.apache.hadoop.mapreduce.lib.output.TextOutputFormat");
+		newArgs.add("-inkey");
+		newArgs.add("org.apache.hadoop.io.Text");
+		newArgs.add("-inval");
+		newArgs.add("ilps.hadoop.StreamItemWritable");
+		newArgs.add("-outkey");
+		newArgs.add("org.apache.hadoop.io.Text");
+		newArgs.add("-outval");
+		newArgs.add("tuan.hadoop.io.IntFloatArrayListWritable");
+		newArgs.add("-mapper");
+		newArgs.add("de.l3s.streamcorpus.mapreduce.AnnotTS14$MyMapper");
+		
 		try {
-			ToolRunner.run(new AnnotTS14(), args);
+			ToolRunner.run(new Annotation(), args);
 		} catch (Exception e) {
 			LOG.error("FAILED: ", e);
 			e.printStackTrace();
