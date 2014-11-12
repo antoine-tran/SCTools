@@ -33,7 +33,7 @@ Annotating massively the StreamCorpus documents with state-of-the-art named enti
 
 where the INPATH is the path in shared locations of your data (e.g. HDFS), OUTPATH is where you want to store the annotation results (CSV format: docid TAB [list of <entity,score> pairs]), and "dexter-conf" is the location of the configuration file dexter-conf.xml:
 
-<code>
+<p><code>
 
 &lt;model&gt; 
 
@@ -44,6 +44,7 @@ where the INPATH is the path in shared locations of your data (e.g. HDFS), OUTPA
 &lt;/model&gt;
 
 </code>
+</p>
 
 
 2. Run: After compiling with Maven, just run the run-jars.sh script:
