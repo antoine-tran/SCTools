@@ -42,7 +42,7 @@ where the INPATH is the path in shared locations of your data (e.g. HDFS), OUTPA
 
 &lt;/model&gt;
 
-&lt;/code&gt;
+</code>
 
 
 2. Run: After compiling with Maven, just run the run-jars.sh script:
