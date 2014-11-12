@@ -34,13 +34,13 @@ Annotating massively the StreamCorpus documents with state-of-the-art named enti
 where the INPATH is the path in shared locations of your data (e.g. HDFS), OUTPATH is where you want to store the annotation results (CSV format: docid TAB [list of <entity,score> pairs]), and "dexter-conf" is the location of the configuration file dexter-conf.xml:
 
 ```
-&lt;model&gt; 
+<model>
 
- &lt;name&gt;en&lt;/name&gt;
+ <name>en</name>
 
- &lt;path&gt;hdfs://[YOUR_HADOOP_CLUSTER_HOST]/[PATH-TO-English-model-directory]&lt;/path&gt;
+ <path>hdfs://[YOUR_HADOOP_CLUSTER_HOST]/[PATH-TO-English-model-directory]</path>
 
-&lt;/model&gt;
+</model>
 ```
 
 
