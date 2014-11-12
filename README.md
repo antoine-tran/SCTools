@@ -5,7 +5,7 @@ SCTools is a small set of tools to preprocess the [StreamCorpus dataset](http://
 
 
 
-Terrier Indexing:
+###### Terrier Indexing: ######
 ==========
 
 Indexing TREC StreamCorpus in Hadoop mode using Terrier
@@ -15,18 +15,17 @@ This software includes a patch for Terrier to support reading .xz files in the c
 It has been tested on a Hadoop cluster running on Cloudera CDH5.1.0 (Hadoop 2.3.0), Terrier 4.0 and StreamCorpus v0.3.0.
 
 
-###### Install and Run ######
 
-1. After compiling using Maven compile task, you need to configure Terrier in Hadoop settings (see [here](http://terrier.org/docs/v4.0/hadoop_configuration.html)). The most important values are the index path ("terrier.index.path") and collection path ("collection.spec"). To index StreamCorpus collection, please specify the Terrier API for StreamCorpus collection class with the value as follows:
+1. Configuration: After compiling using Maven compile task, you need to configure Terrier in Hadoop settings (see [here](http://terrier.org/docs/v4.0/hadoop_configuration.html)). The most important values are the index path ("terrier.index.path") and collection path ("collection.spec"). To index StreamCorpus collection, please specify the Terrier API for StreamCorpus collection class with the value as follows:
 
      <code> trec.collection.class=de.l3s.streamcorpus.StreamCorpusCollection</code>
 
-2. Run with the run-jars.sh script: 
+2. Run: Run with the run-jars.sh script: 
 
 <code> sh run-jars.sh bin/sctools-[VERSION].jar de.l3s.streamcorpus.mapreduce.TerrierIndexing</code>
 
 
-Massive Entity Annotation:
+###### Massive Entity Annotation: ######
 ==========
 
 Annotating massively the StreamCorpus documents with state-of-the-art named entity disambiguation algorithms such as TagMe or WikiMiner. It relies on great annotation toolkit [Dexter](http://dexter.isti.cnr.it)
@@ -36,10 +35,12 @@ Annotating massively the StreamCorpus documents with state-of-the-art named enti
 where the INPATH is the path in shared locations of your data (e.g. HDFS), OUTPATH is where you want to store the annotation results (CSV format: docid TAB [list of <entity,score> pairs]), and "dexter-conf" is the location of the configuration file dexter-conf.xml:
 
 <code>
+<pre>
 <model>
  <name>en</name>
  <path>hdfs://[YOUR_HADOOP_CLUSTER_HOST]/[PATH-TO-English-model-directory]</path>
 </model>
+</pre>
 </code>
 
 
