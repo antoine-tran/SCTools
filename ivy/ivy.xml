@@ -35,6 +35,7 @@
     <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.1" conf="*->*,!sources,!javadoc" />
     <dependency org="net.sf.trove4j" name="trove4j" rev="2.0.2" conf="*->*,!sources,!javadoc"/>
     <dependency org="fastutil" name="fastutil" rev="5.0.9" conf="*->*,!sources,!javadoc" />
+    <dependency org="tuan4j" name="tuan4j-core" rev="0.2-beta1" conf="*->*,!sources,!javadoc" />
     <dependency org="tuan4j" name="tuan4j-distributed" rev="0.2-beta1" conf="*->*,!sources,!javadoc" />
     <dependency org="com.google.code.gson" name="gson" rev="2.3" conf="*->*,!sources,!javadoc" />
     <dependency org="junit" name="junit" rev="4.11" conf="test->*,!sources,!javadoc" />

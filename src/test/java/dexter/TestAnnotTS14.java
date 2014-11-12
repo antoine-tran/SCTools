@@ -3,13 +3,21 @@ package dexter;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 import it.cnr.isti.hpc.dexter.StandardTagger;
 import it.cnr.isti.hpc.dexter.Tagger;
+import it.cnr.isti.hpc.dexter.common.Field;
+import it.cnr.isti.hpc.dexter.common.FlatDocument;
 import it.cnr.isti.hpc.dexter.common.MultifieldDocument;
 import it.cnr.isti.hpc.dexter.disambiguation.Disambiguator;
+import it.cnr.isti.hpc.dexter.entity.EntityMatch;
 import it.cnr.isti.hpc.dexter.entity.EntityMatchList;
 import it.cnr.isti.hpc.dexter.rest.domain.AnnotatedDocument;
 import it.cnr.isti.hpc.dexter.rest.domain.AnnotatedSpot;
+import it.cnr.isti.hpc.dexter.rest.domain.Tagmeta;
 import it.cnr.isti.hpc.dexter.spotter.Spotter;
 import it.cnr.isti.hpc.dexter.util.DexterLocalParams;
 import it.cnr.isti.hpc.dexter.util.DexterParams;
@@ -25,7 +33,6 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.compress.compressors.xz.XZCompressorInputStream;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
-
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -36,9 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.l3s.streamcorpus.mapreduce.AnnotTS14;
-
 import streamcorpus.StreamItem;
-
 import tuan.terrier.Files;
 import tuan.terrier.HadoopDistributedFileSystem;
 
@@ -250,14 +255,14 @@ public class TestAnnotTS14 extends Configured implements Tool {
 				}
 				
 				String text = item.getBody().getClean_visible();
-				MultifieldDocument doc = AnnotTS14.parseDocument(text, "text");		
+				MultifieldDocument doc = parseDocument(text, "text");		
 
 				EntityMatchList eml = tagger.tag(new DexterLocalParams(), doc);
 
 				AnnotatedDocument adoc = new AnnotatedDocument(doc);
 
 				
-				AnnotTS14.annotate(adoc, eml, entitiesToAnnotate, addWikinames, minConfidence);
+				annotate(adoc, eml, entitiesToAnnotate, addWikinames, minConfidence);
 				
 				for (AnnotatedSpot spot : adoc.getSpots()) {
 					System.out.println("Mention: " + spot.getMention() 
@@ -279,6 +284,107 @@ public class TestAnnotTS14 extends Configured implements Tool {
 		return 0;
 	}
 
+	public static MultifieldDocument parseDocument(String text, String format) {
+		Tagmeta.DocumentFormat df = Tagmeta.getDocumentFormat(format);
+		MultifieldDocument doc = null;
+		if (df == Tagmeta.DocumentFormat.TEXT) {
+			doc = new FlatDocument(text);
+		}
+		return doc;
+	}
+	
+	public static void annotate(AnnotatedDocument adoc, EntityMatchList eml,
+			int nEntities, boolean addWikiNames, double minConfidence) {
+		eml.sort();
+		EntityMatchList emlSub = new EntityMatchList();
+		int size = Math.min(nEntities, eml.size());
+		List<AnnotatedSpot> spots = adoc.getSpots();
+		spots.clear();
+		for (int i = 0; i < size; i++) {
+			EntityMatch em = eml.get(i);
+			if (em.getScore() < minConfidence) {
+				
+				continue;
+			}
+			emlSub.add(em);
+			AnnotatedSpot spot = new AnnotatedSpot(em.getMention(),
+					em.getSpotLinkProbability(), em.getStart(), em.getEnd(), em
+							.getSpot().getLinkFrequency(), em.getSpot()
+							.getFrequency(), em.getId(), em.getFrequency(),
+					em.getCommonness(), em.getScore());
+			spot.setField(em.getSpot().getField().getName());
+			/*if (addWikiNames) {
+				spot.setWikiname(helper.getLabel(em.getId()));
+			}*/
+
+			spots.add(spot);
+		}
+		MultifieldDocument annotatedDocument = getAnnotatedDocument(adoc,
+				emlSub);
+		adoc.setAnnotatedDocument(annotatedDocument);
+	}
+	
+	public static MultifieldDocument getAnnotatedDocument(AnnotatedDocument adoc,
+			EntityMatchList eml) {
+		Collections.sort(eml, new EntityMatch.SortByPosition());
+
+		Iterator<Field> iterator = adoc.getDocument().getFields();
+		MultifieldDocument annotated = new MultifieldDocument();
+		while (iterator.hasNext()) {
+			int pos = 0;
+			StringBuffer sb = new StringBuffer();
+			Field field = iterator.next();
+			String currentField = field.getName();
+			String currentText = field.getValue();
+
+			for (EntityMatch em : eml) {
+				if (!em.getSpot().getField().getName().equals(currentField)) {
+					continue;
+				}
+				assert em.getStart() >= 0;
+				assert em.getEnd() >= 0;
+				try {
+					sb.append(currentText.substring(pos, em.getStart()));
+				} catch (java.lang.StringIndexOutOfBoundsException e) {
+					LOG.warn(
+							"error annotating text output of bound for range {} - {} ",
+							pos, em.getStart());
+					LOG.warn("text: \n\n {}\n\n", currentText);
+				}
+				// the spot has been normalized, i want to retrieve the real one
+				String realSpot = "none";
+				try {
+					realSpot = currentText
+							.substring(em.getStart(), em.getEnd());
+				} catch (java.lang.StringIndexOutOfBoundsException e) {
+					LOG.warn(
+							"error annotating text output of bound for range {} - {} ",
+							pos, em.getStart());
+					LOG.warn("text: \n\n {}\n\n", currentText);
+				}
+				sb.append(
+						"<a href=\"#\" onmouseover='manage(" + em.getId()
+								+ ")' >").append(realSpot).append("</a>");
+				pos = em.getEnd();
+			}
+			if (pos < currentText.length()) {
+				try {
+					sb.append(currentText.substring(pos));
+				} catch (java.lang.StringIndexOutOfBoundsException e) {
+					LOG.warn(
+							"error annotating text output of bound for range {} - end ",
+							pos);
+					LOG.warn("text: \n\n {}\n\n", currentText);
+				}
+
+			}
+			annotated.addField(new Field(field.getName(), sb.toString()));
+
+		}
+
+		return annotated;
+	}
+	
 	/** Register the HDFS filesystem to tuan.terrier.Files, so that any libraries use the class
 	 * to open files can both read in local and HDFS file systems 
 	 * @throws IOException */
