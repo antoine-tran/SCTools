@@ -220,7 +220,7 @@
 						<artifactId>sam-jdk</artifactId> <version>1.108</version> <packaging>jar</packaging> 
 						<generatePom>true</generatePom> </configuration> <goals> <goal>install-file</goal> 
 						</goals> </execution> -->
-						
+
 					<execution>
 						<phase>validate</phase>
 						<id>install-old-antlr</id>
@@ -242,7 +242,7 @@
 						<configuration>
 							<file>${project.basedir}/ivy/local-lib/terrier/sam-1.108.jar</file>
 							<groupId>pi.picard</groupId>
-		  				<artifactId>sam-jdk</artifactId> 
+							<artifactId>sam-jdk</artifactId>
 							<version>1.108</version>
 							<packaging>jar</packaging>
 							<generatePom>true</generatePom>
@@ -257,7 +257,7 @@
 						<configuration>
 							<file>${project.basedir}/ivy/local-lib/terrier/snowball-20071024.jar</file>
 							<groupId>snowball</groupId>
-		  				<artifactId>snowball</artifactId> 
+							<artifactId>snowball</artifactId>
 							<version>20071024</version>
 							<packaging>jar</packaging>
 							<generatePom>true</generatePom>
@@ -272,7 +272,7 @@
 						<configuration>
 							<file>${project.basedir}/ivy/local-lib/terrier/terrier-4.0-core.jar</file>
 							<groupId>org.terrier</groupId>
-		  				<artifactId>terrier</artifactId> 
+							<artifactId>terrier</artifactId>
 							<version>4.0-1</version>
 							<packaging>jar</packaging>
 							<generatePom>true</generatePom>
@@ -282,7 +282,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>		
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -382,49 +382,56 @@
 				</dependency>
 			</dependencies>
 		</profile>
-		
+
 	</profiles>
 
 	<dependencies>
 
-    <!-- Install and add local dependencies for Terrier configuration here -->
+		<!-- Install and add local dependencies for Terrier configuration here -->
 		<dependency>
-		  <groupId>net.sourceforge.findbugs</groupId>
-		  <artifactId>annotations</artifactId>
-		  <version>1.3.2</version>
+			<groupId>net.sourceforge.findbugs</groupId>
+			<artifactId>annotations</artifactId>
+			<version>1.3.2</version>
 		</dependency>
 		<dependency>
-	    <groupId>me.lemire.integercompression</groupId>
-		  <artifactId>JavaFastPFOR</artifactId>
-		  <version>0.1.2</version>
+			<groupId>me.lemire.integercompression</groupId>
+			<artifactId>JavaFastPFOR</artifactId>
+			<version>0.1.2</version>
 		</dependency>
 		<dependency>
-		  <groupId>org.terrier</groupId>
-		  <artifactId>terrier</artifactId> 
+			<groupId>org.terrier</groupId>
+			<artifactId>terrier</artifactId>
 			<version>4.0-1</version>
 		</dependency>
-		
+
 		<dependency>
-							<groupId>antlr</groupId>
-							<artifactId>antlr</artifactId>
-							<version>20141112</version>
-						</dependency>
-						
-					<dependency>
-							<groupId>pi.picard</groupId>
-		  				<artifactId>sam-jdk</artifactId> 
-							<version>1.108</version>
-					</dependency>
-					<dependency>
-							<groupId>snowball</groupId>
-		  				<artifactId>snowball</artifactId> 
-							<version>20071024</version>
-						</dependency>
-		
-    <!-- Install and add local dependencies for H-Dexter configuration here -->
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.5</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>antlr</groupId>
+			<artifactId>antlr</artifactId>
+			<version>20141112</version>
+		</dependency>
+
+		<dependency>
+			<groupId>pi.picard</groupId>
+			<artifactId>sam-jdk</artifactId>
+			<version>1.108</version>
+		</dependency>
+		<dependency>
+			<groupId>snowball</groupId>
+			<artifactId>snowball</artifactId>
+			<version>20071024</version>
+		</dependency>
+
+		<!-- Install and add local dependencies for H-Dexter configuration here -->
 		<dependency>
 			<groupId>it.cnr.isti.hpc</groupId>
-			<artifactId>h-dexter</artifactId>
+			<artifactId>dexter-hadoop</artifactId>
 			<version>0.1-beta1</version>
 		</dependency>
 
@@ -569,10 +576,10 @@
 			<version>1.1.0</version>
 		</dependency>
 
-		 
-		<dependency> 
-		  <groupId>pi.picard</groupId>
-		  <artifactId>sam-jdk</artifactId> 
+
+		<dependency>
+			<groupId>pi.picard</groupId>
+			<artifactId>sam-jdk</artifactId>
 			<version>1.108</version>
 		</dependency>
 
