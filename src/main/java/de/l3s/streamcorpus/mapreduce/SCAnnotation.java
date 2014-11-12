@@ -29,9 +29,9 @@ import tuan.hadoop.io.IntFloatArrayListWritable;
  * @author tuan
  *
  */
-public class Annotation extends HadoopAnnotation implements Tool {
+public class SCAnnotation extends HadoopAnnotation implements Tool {
 
-	private static Logger LOG = LoggerFactory.getLogger(Annotation.class);
+	private static Logger LOG = LoggerFactory.getLogger(SCAnnotation.class);
 
 	public static final class MyMapper 
 			extends AnnotateMapper<Text, StreamItemWritable, 
@@ -111,7 +111,8 @@ public class Annotation extends HadoopAnnotation implements Tool {
 		newArgs.add("de.l3s.streamcorpus.mapreduce.AnnotTS14$MyMapper");
 		
 		try {
-			ToolRunner.run(new Annotation(), args);
+			ToolRunner.run(new SCAnnotation(), 
+					newArgs.toArray(new String[newArgs.size()]));
 		} catch (Exception e) {
 			LOG.error("FAILED: ", e);
 			e.printStackTrace();
