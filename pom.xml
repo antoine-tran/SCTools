@@ -4,9 +4,9 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.l3s.streamcorpus</groupId>
-	<artifactId>streamcorpus-dexter</artifactId>
-	<name>StreamCorpus Dexter Plugin</name>
-	<description>StreamCorpus Entity Linking Plugin using Dexter Framework</description>
+	<artifactId>sctools</artifactId>
+	<name>StreamCorpus Tools</name>
+	<description>Hadoop toolkit for working with StreamCorpus</description>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<licenses>
@@ -326,9 +326,12 @@
 				</dependency>
 			</dependencies>
 		</profile>
+		
 	</profiles>
 
 	<dependencies>
+
+    <!-- Install and add local dependencies for Terrier configuration here -->
 
 		<dependency>
 			<groupId>it.cnr.isti.hpc</groupId>

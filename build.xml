@@ -1,16 +1,18 @@
-<project name="StreamCorpusIndexer" default="scripts"
+<project name="SCTools" default="scripts"
          xmlns:ivy="antlib:org.apache.ivy.ant" xmlns:artifact="antlib:org.apache.maven.artifact.ant" basedir=".">
-  <description>Wikipedia Analysis Using Edit and View Logs</description>
+  <description>Hadoop toolkit for handling StreamCorpus data</description>
 	
   <property name="lib.dir" value="lib" />
   <property name="local-lib.dir" value="ivy/local-repo" />
+	<property name="local-lib-dexter.dir" value="${local-lib.dir}/dexter" />
+	<property name="local-lib-terrier.dir" value="${local-lib.dir}/terrier" />
   <property name="project.encoding" value="UTF-8"/>
   <property name="build.dir" value="bin"/>
-  <property name="src.dir" value="src"/>
+  <property name="src.dir" value="src/main/java"/>
   <property name="dist.dir" value="bin"/>
   <property name="etc.dir" value="etc"/>
   <property name="data.dir" value="data"/>
-  <property name="test.dir" location="java/test" />
+  <property name="test.dir" location="src/test/java" />
   <property name="junit.report.dir" location="test/reports" />
   <property name="testdata.dir" value="test/data"/>
   <property name="javadoc.dir" location="docs/api/" />
@@ -62,7 +64,7 @@
 
   <!-- define Maven coordinates, repository url and artifacts name etc -->
   <property name="groupId" value="de.l3s.streamcorpus" />
-  <property name="artifactId" value="streamcorpus-indexer" />
+  <property name="artifactId" value="sctools" />
   <property name="version" value="${version}" />
 
   <property name="maven-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2" />
@@ -148,7 +150,9 @@
 		
   <target name="copy-local-ivy-to-lib">
   	<copy todir="${lib.dir}">
-  	    <fileset dir="${local-lib.dir}" includes="**"/>
+  	  <fileset dir="${local-lib.dir}" includes="**"/>
+  		<fileset dir="${local-lib-dexter.dir}" includes="**"/>
+  		<fileset dir="${local-lib-terrier.dir}" includes="**"/>
   	</copy> 
   </target>
 	

@@ -4,6 +4,8 @@
   <configurations>
     <conf name="default"/>
     <conf name="test" extends="default"/> 
+    <conf name="dexter" extends="default"/>
+    <conf name="terrier" extends="default"/>
   </configurations>
   
   <publications>
@@ -38,7 +40,7 @@
     <dependency org="junit" name="junit" rev="4.11" conf="test->*,!sources,!javadoc" />
     <dependency org="com.moparisthebest" name="junidecode" rev="0.1.1" conf="*->*,!sources,!javadoc" />
     
-    <!-- -->
+    <!-- TODO: Add Christian's Boilerpipe lib here -->
     
   </dependencies>
 </ivy-module>
