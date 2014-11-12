@@ -4,9 +4,9 @@ StreamCorpus Tools
 SCTools is a small set of tools to preprocess the [StreamCorpus dataset](http://s3.amazonaws.com/aws-publicdatasets/trec/ts/index.html) in Hadoop MapReduce environment. Current task includes (still updating):
 
 
-
-###### Terrier Indexing: ######
 ==========
+###### Terrier Indexing: ######
+
 
 Indexing TREC StreamCorpus in Hadoop mode using Terrier
 
@@ -24,9 +24,8 @@ It has been tested on a Hadoop cluster running on Cloudera CDH5.1.0 (Hadoop 2.3.
 
 <code> sh run-jars.sh bin/sctools-[VERSION].jar de.l3s.streamcorpus.mapreduce.TerrierIndexing</code>
 
-
-###### Massive Entity Annotation: ######
 ==========
+###### Massive Entity Annotation: ######
 
 Annotating massively the StreamCorpus documents with state-of-the-art named entity disambiguation algorithms such as TagMe or WikiMiner. It relies on great annotation toolkit [Dexter](http://dexter.isti.cnr.it)
 
@@ -35,7 +34,7 @@ Annotating massively the StreamCorpus documents with state-of-the-art named enti
 where the INPATH is the path in shared locations of your data (e.g. HDFS), OUTPATH is where you want to store the annotation results (CSV format: docid TAB [list of <entity,score> pairs]), and "dexter-conf" is the location of the configuration file dexter-conf.xml:
 
 <code>
-&lt;model&gt;
+&lt;model&gt; 
  &lt;name&gt;en&lt;/name&gt;
  &lt;path&gt;hdfs://[YOUR_HADOOP_CLUSTER_HOST]/[PATH-TO-English-model-directory]&lt;/path&gt;
 &lt;/model&gt;
