@@ -35,11 +35,8 @@ where the INPATH is the path in shared locations of your data (e.g. HDFS), OUTPA
 
 ```
 <model>
-
  <name>en</name>
-
  <path>hdfs://[YOUR_HADOOP_CLUSTER_HOST]/[PATH-TO-English-model-directory]</path>
-
 </model>
 ```
 
