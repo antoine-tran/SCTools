@@ -335,6 +335,13 @@
 
 		<dependency>
 			<groupId>it.cnr.isti.hpc</groupId>
+			<artifactId>h-dexter</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>it.cnr.isti.hpc</groupId>
 			<artifactId>dexter-tagme</artifactId>
 			<version>2.1.0</version>
 		</dependency>
