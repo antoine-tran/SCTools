@@ -108,7 +108,7 @@ public class SCAnnotation extends HadoopAnnotation implements Tool {
 		newArgs.add("-outval");
 		newArgs.add("tuan.hadoop.io.IntFloatArrayListWritable");
 		newArgs.add("-mapper");
-		newArgs.add("de.l3s.streamcorpus.mapreduce.AnnotTS14$MyMapper");
+		newArgs.add("de.l3s.streamcorpus.mapreduce.SCAnnotation$MyMapper");
 		
 		try {
 			ToolRunner.run(new SCAnnotation(), 
