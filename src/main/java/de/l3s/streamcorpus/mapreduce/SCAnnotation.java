@@ -71,6 +71,11 @@ public class SCAnnotation extends HadoopAnnotation implements Tool {
 			values.add(item.getBody().getClean_visible());
 			return values;
 		}
+
+		@Override
+		public boolean postAnnotations(Text arg0, IntFloatArrayListWritable vals) {
+			return !vals.isEmpty();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
