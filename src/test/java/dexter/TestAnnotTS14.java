@@ -178,7 +178,7 @@ public class TestAnnotTS14 extends Configured implements Tool {
 			dexterParams = DexterParams.getInstance();
 		}
 		s = dexterParams.getSpotter("wiki-dictionary");
-		d = dexterParams.getDisambiguator("wikiminer");
+		d = dexterParams.getDisambiguator("tagme");
 
 		tagger = new StandardTagger("std", s, d);
 		addWikinames = new Boolean("true");
