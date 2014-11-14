@@ -56,7 +56,7 @@ public class StreamItemWritable extends StreamItem implements Writable {
 
 		try {
 
-			byte[] bytes = serializer.ser€®¥¥ialize(this);
+			byte[] bytes = serializer.serialize(this);
 			WritableUtils.writeVInt(out, bytes.length);
 			out.write(bytes, 0, bytes.length);
 
