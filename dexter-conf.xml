@@ -57,7 +57,7 @@
 		</ranker>
 	</rankers>
 	<libs>
-		<lib>libs</lib>
+		<lib>ivy/local-lib/dexter</lib>
 	</libs>
 	<caches>
 		<cache>

@@ -84,7 +84,7 @@
 						<phase>validate</phase>
 						<id>install-dexter-core</id>
 						<configuration>
-							<file>${project.basedir}/ivy/local-lib/dexter/dexter-core-2.1.0-recompiled.jar</file>
+							<file>${project.basedir}/ivy/local-lib/dexter/dexter-core-2.1.0.1.jar</file>
 							<groupId>it.cnr.isti.hpc</groupId>
 							<artifactId>dexter-core</artifactId>
 							<version>2.1.0.1</version>
@@ -297,6 +297,7 @@
 						<configuration>
 							<pathSeparator>,</pathSeparator>
 							<outputAbsoluteArtifactFilename>true</outputAbsoluteArtifactFilename>
+							<excludeGroupIds>org.apache.hadoop,log4j,org.eclipse.jetty</excludeGroupIds>
 						</configuration>
 					</execution>
 				</executions>
@@ -324,59 +325,119 @@
 					<artifactId>hadoop-common</artifactId>
 					<version>2.3.0-cdh5.1.0</version>
 					<optional>true</optional>
+					<exclusions>
+						<exclusion>
+							<groupId>*</groupId>
+							<artifactId>*</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.hadoop</groupId>
 					<artifactId>hadoop-yarn-api</artifactId>
 					<version>2.3.0-cdh5.1.0</version>
 					<optional>true</optional>
+					<exclusions>
+						<exclusion>
+							<groupId>*</groupId>
+							<artifactId>*</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.hadoop</groupId>
 					<artifactId>hadoop-yarn-common</artifactId>
 					<version>2.3.0-cdh5.1.0</version>
 					<optional>true</optional>
+					<exclusions>
+						<exclusion>
+							<groupId>*</groupId>
+							<artifactId>*</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>edu.umd</groupId>
 					<artifactId>cloud9</artifactId>
 					<version>1.5.0</version>
+					<exclusions>
+						<exclusion>
+							<groupId>*</groupId>
+							<artifactId>*</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.hadoop</groupId>
 					<artifactId>hadoop-yarn-server-common</artifactId>
 					<version>2.3.0-cdh5.1.0</version>
 					<optional>true</optional>
+					<exclusions>
+						<exclusion>
+							<groupId>*</groupId>
+							<artifactId>*</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.hadoop</groupId>
 					<artifactId>hadoop-yarn-server-nodemanager</artifactId>
 					<version>2.3.0-cdh5.1.0</version>
 					<optional>true</optional>
+					<exclusions>
+						<exclusion>
+							<groupId>*</groupId>
+							<artifactId>*</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.hadoop</groupId>
 					<artifactId>hadoop-yarn-server-resourcemanager</artifactId>
 					<version>2.3.0-cdh5.1.0</version>
 					<optional>true</optional>
+					<exclusions>
+						<exclusion>
+							<groupId>*</groupId>
+							<artifactId>*</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.hadoop</groupId>
 					<artifactId>hadoop-hdfs</artifactId>
 					<version>2.3.0-cdh5.1.0</version>
 					<optional>true</optional>
+					<exclusions>
+						<exclusion>
+							<groupId>*</groupId>
+							<artifactId>*</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.hadoop</groupId>
 					<artifactId>hadoop-mapreduce-client-core</artifactId>
 					<version>2.3.0-cdh5.1.0</version>
 					<optional>true</optional>
+					<exclusions>
+						<exclusion>
+							<groupId>*</groupId>
+							<artifactId>*</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.hadoop</groupId>
 					<artifactId>hadoop-streaming</artifactId>
 					<version>2.3.0-cdh5.1.0</version>
 					<optional>true</optional>
+					<exclusions>
+						<exclusion>
+							<groupId>*</groupId>
+							<artifactId>*</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 			</dependencies>
 		</profile>
