@@ -68,7 +68,7 @@ public class SCAnnotation extends HadoopAnnotation implements Tool {
 				return null;
 			}
 			HashSet<String> values = new HashSet<>();
-			System.out.println("Text: " + item.getBody().getClean_visible());
+			System.out.println("Text: " +item.getBody().getClean_visible());
 			values.add(item.getBody().getClean_visible());
 			return values;
 		}
