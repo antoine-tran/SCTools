@@ -77,12 +77,8 @@ public class TestAnnotTS14 extends Configured implements Tool {
 
 	protected CommandLine command;	
 
-	private int reduceNo = 24;
 	private String jobName;
 	private String input;
-	private String output;
-	private String compressType = null;	
-	private boolean removeOutputDirectory = false;
 
 	@SuppressWarnings("static-access")
 	public Options options() {
@@ -100,22 +96,9 @@ public class TestAnnotTS14 extends Configured implements Tool {
 				.withDescription("output file path (required)")
 				.create(OUTPUT_OPT);
 
-		Option reduceOpt = OptionBuilder.withArgName("reduce-no").hasArg(true)
-				.withDescription("number of reducer nodes").create(REDUCE_NO);
-
-		Option rmOpt = OptionBuilder.withArgName("remove-out").hasArg(false)
-				.withDescription("remove the output then create again before writing files onto it")
-				.create(REMOVE_OUTPUT);
-
-		Option cOpt = OptionBuilder.withArgName("compress-option").hasArg(true)
-				.withDescription("compression option").create(COMPRESS_OPT);
-
 		opts.addOption(jnameOpt);
 		opts.addOption(inputOpt);
-		opts.addOption(reduceOpt);
 		opts.addOption(outputOpt);
-		opts.addOption(rmOpt);
-		opts.addOption(cOpt);
 		
 		Option nedOpt = OptionBuilder.withArgName("disambiguator").hasArg(true)
 				.withDescription("method of disambiguation (Tagme / Wikiminer)")
@@ -147,28 +130,12 @@ public class TestAnnotTS14 extends Configured implements Tool {
 			return -1;
 		}
 
-		if (command.hasOption(REDUCE_NO)) {
-			try {
-				reduceNo = Integer.parseInt(command.getOptionValue(REDUCE_NO));
-			} catch (NumberFormatException e) {
-				System.err.println("Error parsing reducer number: "
-						+ e.getMessage());
-			}
-		}
-
+	
 		if (command.hasOption(JOB_NAME)) {
 			jobName = command.getOptionValue(JOB_NAME);
 			jobName = jobName.replace('-',' ');
 		} else {
 			jobName = this.getClass().getCanonicalName();
-		}
-
-		if (command.hasOption(REMOVE_OUTPUT)) {
-			markOutputForDeletion();
-		}
-
-		if (command.hasOption(COMPRESS_OPT)) {
-			setCompress(command.getOptionValue(COMPRESS_OPT));
 		}
 
 		// load extra options into configuration object
@@ -187,22 +154,10 @@ public class TestAnnotTS14 extends Configured implements Tool {
 		getConf().set(DISAMB_HDFS_OPT, disambiguator);
 
 		input = command.getOptionValue(INPUT_OPT);
-		output = command.getOptionValue(OUTPUT_OPT);
 
 		return 0;
 	}
 
-	public void markOutputForDeletion() {
-		removeOutputDirectory = true;
-	}
-
-	/**
-	 * Compress type: gz, bz2, lz4, snappy, lzo
-	 * @param type
-	 */
-	public void setCompress(String type) {
-		compressType = type;
-	}
 
 	@Override
 	public int run(String[] args) throws Exception {
@@ -247,7 +202,8 @@ public class TestAnnotTS14 extends Configured implements Tool {
 		while (true) {
 			try {
 				item.read(protocol);
-				System.out.println("docID = " + item.getDoc_id() + ", streamID = " + item.getStream_id() + ", " + item.getStream_time().toString());
+				System.out.println("docID = " + item.getDoc_id() + ", streamID = "
+						+ item.getStream_id() + ", " + item.getStream_time().toString());
 				
 				if (item.getBody() == null || item.getBody().getClean_visible() == null ||
 						item.getBody().getClean_visible().isEmpty()) {
