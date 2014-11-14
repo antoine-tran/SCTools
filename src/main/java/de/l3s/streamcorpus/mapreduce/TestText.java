@@ -74,7 +74,7 @@ public class TestText extends JobConfig implements Tool {
 
 	public static void main(String[] args) {
 		try {
-			ToolRunner.run(new CountDocs(), args);
+			ToolRunner.run(new TestText(), args);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
