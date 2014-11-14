@@ -88,7 +88,8 @@ public class SCAnnotation extends HadoopAnnotation implements Tool {
 		job.getConfiguration().set("mapreduce.map.java.opts", "-Xmx4096m");
 		job.getConfiguration().set("mapreduce.reduce.java.opts", "-Xmx4096m");
 		job.getConfiguration().set("mapreduce.job.user.classpath.first", "true");
-		
+		job.setJarByClass(getClass());
+
 		return job;
 	}
 
