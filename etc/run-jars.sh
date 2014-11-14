@@ -6,6 +6,8 @@
 
 LOG4J=-Dlog4j.configuration=file:etc/log4j.properties
 
+mvn validate install -DskipTests
+
 # path to your jar file here. Default is the maven artifact in your local repo
 export JAR_PATH="target/sctools-0.1-SNAPSHOT.jar"
 
