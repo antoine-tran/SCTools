@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import de.l3s.streamcorpus.mapreduce.SCAnnotation;
 import streamcorpus.StreamItem;
+import tuan.hadoop.io.IntFloatArrayListWritable;
 import tuan.terrier.Files;
 import tuan.terrier.HadoopDistributedFileSystem;
 
@@ -190,6 +191,7 @@ public class TestAnnotTS14 extends Configured implements Tool {
 			ned = conf.get(DISAMB_HDFS_OPT);
 		}
 
+		IntFloatArrayListWritable arrays = new IntFloatArrayListWritable();
 		InputStream inp = Files.openFileStream(input);
 		TTransport transport = new TIOStreamTransport(new XZCompressorInputStream(
 				new BufferedInputStream(inp)));
@@ -221,9 +223,12 @@ public class TestAnnotTS14 extends Configured implements Tool {
 				annotate(adoc, eml, entitiesToAnnotate, addWikinames, minConfidence);
 				
 				for (AnnotatedSpot spot : adoc.getSpots()) {
-					System.out.println("Mention: " + spot.getMention() 
-					 + ", wikipedia page ID: " + spot.getEntity() + ", score: " + spot.getScore());
+					/*System.out.println("Mention: " + spot.getMention() 
+					 + ", wikipedia page ID: " + spot.getEntity() + ", score: " + spot.getScore());*/
+					arrays.add(spot.getEntity(),  (float) spot.getScore());
 				}
+				
+				System.out.println(arrays);
 									
 			} catch (TTransportException e) {
 				int type = e.getType();
