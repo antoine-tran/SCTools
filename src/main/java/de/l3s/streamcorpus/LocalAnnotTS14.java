@@ -261,7 +261,8 @@ public class LocalAnnotTS14 {
 		LocalAnnotTS14 annot = new LocalAnnotTS14();
 		for (String line : FileUtility.readLines(args[0])) {
 			try {
-				annot.setup(args[1] + "/" + line);
+				int idx = line.lastIndexOf('/');
+				annot.setup(args[1] + "/" + line.substring(idx+1));
 				int res = annot.ned(line);
 				if (res != 0) {
 					System.err.println("ERROR: " + line);
