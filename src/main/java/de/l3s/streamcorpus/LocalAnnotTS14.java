@@ -58,7 +58,7 @@ public class LocalAnnotTS14 {
 
 		dexterParams = DexterParams.getInstance();
 		s = dexterParams.getSpotter("wiki-dictionary");
-		d = dexterParams.getDisambiguator("wikiminer");
+		d = dexterParams.getDisambiguator("tagme");
 
 		tagger = new StandardTagger("std", s, d);
 		addWikinames = new Boolean("true");
