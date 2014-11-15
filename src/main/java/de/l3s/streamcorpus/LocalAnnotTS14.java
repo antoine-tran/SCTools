@@ -1,6 +1,7 @@
 package de.l3s.streamcorpus;
 
 import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -89,7 +90,8 @@ public class LocalAnnotTS14 {
 		TTransport transport = null;
 		
 		try { 
-			inp = Files.openFileStream(input);
+			// inp = Files.openFileStream(input);
+			inp = new FileInputStream(input);
 			transport = new TIOStreamTransport(new XZCompressorInputStream(
 					new BufferedInputStream(inp)));
 			
