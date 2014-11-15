@@ -134,6 +134,7 @@ public class LocalAnnotTS14 {
 					}
 															
 				} catch (TTransportException e) {
+					e.printStackTrace();
 					int type = e.getType();
 					if (type == TTransportException.END_OF_FILE) {
 						break;
@@ -264,6 +265,7 @@ public class LocalAnnotTS14 {
 					System.err.println("ERROR: " + line);
 				}
 			} catch (IOException e) {
+				e.printStackTrace();
 				System.err.println("ERROR: " + line);
 				continue;
 			} catch (TTransportException e) {
@@ -273,6 +275,8 @@ public class LocalAnnotTS14 {
 				try {
 					annot.finish();
 				} catch (IOException e) {
+					e.printStackTrace();
+
 					System.err.println("Cannot close: " + line);
 				}
 			}
