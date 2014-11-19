@@ -14,8 +14,10 @@ import streamcorpus.Token;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -37,7 +39,7 @@ public final class ReadThrift {
 			//            TTransport transport = new TFileTransport("test-data/john-smith-tagged-by-lingpipe-0.sc", true);
 			TTransport transport = new TIOStreamTransport(new XZCompressorInputStream(
 					new BufferedInputStream(
-							new FileInputStream("test-data/news-51-44f61feb51e00f2398e2d44afcdf696d-bf5781347d40dc484363ffb284994ce3-5577246a023a7d04878d0e713aa89932.sc.xz"))));
+							new FileInputStream("test-data/news-8-b2b2d66ca26fdac2ff5d321a6b2a54b5-b5a0533946328064f96c1400a4fdff6b-bfab55caaca3820a6faf0391a35fca0b.sc.xz"))));
 			TBinaryProtocol protocol = new TBinaryProtocol(transport);
 			transport.open();
 			int counter = 0;
@@ -48,6 +50,7 @@ public final class ReadThrift {
 					System.out.println("counter = " + ++counter);
 					System.out.println("docID = " + item.getDoc_id() + ", streamID = " + item.getStream_id() + ", " + item.getStream_time().toString());
 					System.out.print("Keys in other_content:");
+					
 					Set<String> keys = item.getOther_content().keySet();
 					for (String k : keys) System.out.print("\t" + k + "-" + item.getOther_content().get(k).getSentencesSize());
 					System.out.println();
@@ -63,7 +66,8 @@ public final class ReadThrift {
 							System.out.print(". ");
 						}						
 						System.out.println();
-					}					
+					}	
+					
 				} catch (TTransportException e) {
 					int type = e.getType();
 					if (type == TTransportException.END_OF_FILE) {
