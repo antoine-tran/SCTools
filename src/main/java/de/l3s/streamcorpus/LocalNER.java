@@ -42,50 +42,39 @@ public class LocalNER {
 					System.out.println("Keys in body:");
 					keys = item.getBody().getSentences().keySet();
 					for (String k : keys) {
-						System.out.print("\t" + k);
+						System.out.println("==============");
+						System.out.println(k);
 						if (item.getBody().getSentences().get(k).size() > 0)
 							for (Sentence s : item.getBody().getSentences().get(k)) {
 								
 								// get the longest chain of named entity stuff
 								EntityType et = null;
-								StringBuilder sb = new StringBuilder();
-								
-								for (Token t : s.tokens) {
-									if (t.entity_type != null) {
-										if (et == null) {
-											et = t.entity_type;
-											sb.delete(0, sb.length());
-											if (et != null) {
-												sb.append(t.token);
-												sb.append(" ");
-											}
+								StringBuilder sb = new StringBuilder();								
+								for (Token t : s.tokens) {	
+									if (t.entity_type != et) {
+										if (sb.length() > 0 && (
+												et == EntityType.ORG ||
+												et == EntityType.LOC || 
+												et == EntityType.PER ||
+												et == EntityType.VEH ||
+												et == EntityType.TIME)) {
+											System.out.println("\t\t" + sb.toString() + "\t" + et);
 										}
-										else {
-											if (et == t.entity_type) {
-												sb.append(t.token);
-												sb.append(" ");
-											}
-											else {
-												if (sb.length() > 0) {
-													System.out
-															.println(sb.toString() + "\t" + et);
-												}
-												sb.delete(0, sb.length());
-												et = t.entity_type;
-												if (t.entity_type != null) {
-													
-													sb.append(t.token);
-													sb.append(" ");
-												}
-											}
-												
+										sb.delete(0, sb.length());
+										et = t.entity_type;
+										if (et != null) {
+											sb.append(t.token);
+											sb.append(" ");
 										}
 									}
-									
+									else if (t.entity_type != null) {
+										sb.append(t.token);
+										sb.append(" ");
+									}
+									else sb.delete(0, sb.length());
 								}
 								if (sb.length() > 0 && et != null) {
-									System.out.println("Last: " + sb.toString() + "\t" + et);
-									sb.delete(0, sb.length());
+									System.out.println("\t\t" + sb.toString() + "\t" + et);
 								}
 							}						
 					}	
