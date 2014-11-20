@@ -262,6 +262,7 @@ public class NEE extends JobConfig implements Tool {
 				return -1;
 			}
 		} catch (NumberFormatException e) {
+			
 			System.err.println("Unrecognised phase: " + command.getOptionValue(PHASE));
 			return -1;
 		}
