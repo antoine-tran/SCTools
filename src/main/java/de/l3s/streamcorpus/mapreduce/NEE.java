@@ -52,9 +52,9 @@ public class NEE extends JobConfig implements Tool {
 	private int phase = 1;
 
 	/** output key = date, output value = map of named entites / word count */
-	private static class Phase1Mapper extends Mapper<Text, StreamItemWritable, IntWritable, HMapSIW> {
+	private static class Phase1Mapper extends Mapper<Text, StreamItemWritable, Text, HMapSIW> {
 
-		private final IntWritable keyOut = new IntWritable();
+		private final Text keyOut = new Text();
 		private final HMapSIW valOut = new HMapSIW();
 
 		@Override
@@ -63,7 +63,8 @@ public class NEE extends JobConfig implements Tool {
 			// This is just to test. The date value can easily be parsed from the file path
 			long ts = (long) item.getStream_time().getEpoch_ticks();										
 			int dateVal = Integer.parseInt(dtf.print((ts * 1000)));
-			keyOut.set(dateVal);
+			//keyOut.set(dateVal);
+			keyOut.set(item.getDoc_id());
 			valOut.clear();
 
 			if (item.getBody() == null) return;
@@ -222,10 +223,10 @@ public class NEE extends JobConfig implements Tool {
 		Job job = setup(jobName + ": Phase 1", NEE.class,
 				input, output,
 				ThriftFileInputFormat.class, SequenceFileOutputFormat.class,
-				IntWritable.class, HMapSIW.class,
-				IntWritable.class, HMapSIW.class,
+				Text.class, HMapSIW.class,
+				Text.class, HMapSIW.class,
 				Phase1Mapper.class, 
-				Phase1Reducer.class, Phase1Reducer.class, reduceNo);
+				Reducer.class, reduceNo);
 
 		configureJob(job);
 		try {
