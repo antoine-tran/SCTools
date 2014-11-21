@@ -206,8 +206,8 @@ public class NEE extends JobConfig implements Tool {
 		Job job = setup(jobName + ": Phase 1", NEE.class,
 				input, output,
 				ThriftFileInputFormat.class, SequenceFileOutputFormat.class,
-				Text.class, HMapSIW.class,
-				Text.class, HMapSIW.class,
+				IntWritable.class, HMapSIW.class,
+				IntWritable.class, HMapSIW.class,
 				Phase1Mapper.class, 
 				Phase1Reducer.class, Phase1Reducer.class, reduceNo);
 
