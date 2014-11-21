@@ -98,14 +98,21 @@ public class NEE extends JobConfig implements Tool {
 
 								String ne = sb.toString();
 								if (!valOut.containsKey(ne)) {
-									valOut.put(ne, 1);
-									if (k != null) {
-										secondNE.add(ne);
+									
+									
+									// ignore too long strings
+									if (ne.length() < 50) {
+										valOut.put(ne, 1);
+										if (k != null) {
+											secondNE.add(ne);
+										}	
 									}
 								}
 								else if (!secondNE.contains(ne)) {
-									int cnt = valOut.get(ne);
-									valOut.put(ne, cnt + 1);
+									if (ne.length() < 50) {
+										int cnt = valOut.get(ne);
+										valOut.put(ne, cnt + 1);	
+									}									
 								}
 							}
 							sb.delete(0, sb.length());
@@ -122,7 +129,16 @@ public class NEE extends JobConfig implements Tool {
 						else sb.delete(0, sb.length());
 					}
 					if (sb.length() > 0 && et != null) {
-						System.out.println("\t\t" + sb.toString() + "\t" + et);
+						String ne = sb.toString();
+						if (ne.length() < 50) {
+							if (!valOut.containsKey(ne)) {
+								valOut.put(ne, 1);
+							}
+							else {
+								int cnt = valOut.get(ne);
+								valOut.put(ne,cnt+1);
+							}
+						}
 					}
 				}
 
