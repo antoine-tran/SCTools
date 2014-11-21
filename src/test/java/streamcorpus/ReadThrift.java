@@ -61,7 +61,7 @@ public final class ReadThrift {
 						if (item.getBody().getSentences().get(k).size() > 0)
 						for (Sentence s : item.getBody().getSentences().get(k)) {							
 							for (Token t : s.tokens) {
-								System.out.print(t.lemma + ' ');
+								System.out.print(t.token + '(' + t.entity_type + ") ");
 							}
 							System.out.print(". ");
 						}						

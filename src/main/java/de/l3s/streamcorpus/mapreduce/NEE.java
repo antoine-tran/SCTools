@@ -242,8 +242,11 @@ public class NEE extends JobConfig implements Tool {
 
 	@Override
 	public int run(String[] args) throws Exception {
+		System.out.println("Starting");
 		parseOtions(args);
+		System.out.println("Option passed.");
 		setMapperSize(MAPPER_SIZE);
+		System.out.println("Mapper size set.");
 		try {
 			if (command.hasOption(PHASE)) {
 				phase = Integer.parseInt(command.getOptionValue(PHASE));
@@ -262,7 +265,7 @@ public class NEE extends JobConfig implements Tool {
 				return -1;
 			}
 		} catch (NumberFormatException e) {
-			
+			e.printStackTrace();
 			System.err.println("Unrecognised phase: " + command.getOptionValue(PHASE));
 			return -1;
 		}
