@@ -191,6 +191,7 @@ public class NEE extends JobConfig implements Tool {
 			for (Entry<String> e : cnts.entrySet()) {
 				ne.set(e.getKey());
 				cnt.set(e.getValue());
+				context.write(ne, cnt);
 			}
 		}
 	}
