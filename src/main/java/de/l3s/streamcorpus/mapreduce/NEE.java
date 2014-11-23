@@ -99,8 +99,8 @@ public class NEE extends JobConfig implements Tool {
 
 								String ne = sb.toString();
 								if (!valOut.containsKey(ne)) {
-									
-									
+
+
 									// ignore too long strings
 									if (ne.length() < 50) {
 										valOut.put(ne, 1);
@@ -138,6 +138,113 @@ public class NEE extends JobConfig implements Tool {
 							else {
 								int cnt = valOut.get(ne);
 								valOut.put(ne,cnt+1);
+							}
+						}
+					}
+				}
+
+				k = annot;
+			}
+			context.write(keyOut, valOut);
+		}
+	}
+
+	/** output key = date, output value = map of named entites / types of named entities:
+	 * 1 --> Person
+	 * 2 --> Location
+	 * 3 --> Organization
+	 * 4 --> Verhicle
+	 * 5 --> Time */
+	private static class Phase1TypedMapper extends Mapper<Text, StreamItemWritable, Text, HMapSIW> {
+
+		private final Text keyOut = new Text();
+		private final HMapSIW valOut = new HMapSIW();
+
+		@Override
+		protected void map(Text key, StreamItemWritable item, Context context)
+				throws IOException, InterruptedException {
+			// This is just to test. The date value can easily be parsed from the file path
+			long ts = (long) item.getStream_time().getEpoch_ticks();										
+			int dateVal = Integer.parseInt(dtf.print((ts * 1000)));
+			//keyOut.set(dateVal);
+			keyOut.set(item.getDoc_id());
+			valOut.clear();
+
+			if (item.getBody() == null) return;
+
+			Map<String, List<Sentence>> sentMap = item.getBody().getSentences();
+			if (sentMap == null || sentMap.isEmpty()) return;
+
+			Set<String> keys = sentMap.keySet();
+			if (keys == null || keys.isEmpty()) return;
+
+			// Get the first annotated sentence, most likely Serif
+			String k = null;
+			Iterator<String> keyIter = keys.iterator();
+
+			while (keyIter.hasNext()) {
+				String annot = keyIter.next();
+
+				for (Sentence s : sentMap.get(annot)) {
+
+					// get the longest chain of named entity stuff
+					EntityType et = null;
+					StringBuilder sb = new StringBuilder();								
+					for (Token t : s.tokens) {	
+						if (t.entity_type != et) {
+							if (sb.length() > 0 && (
+									et == EntityType.ORG ||
+									et == EntityType.LOC || 
+									et == EntityType.PER ||
+									et == EntityType.VEH ||
+									et == EntityType.TIME)) {
+
+								String ne = sb.toString();
+
+								// ignore too long strings
+								if (ne.length() < 50) {
+									if (!valOut.containsKey(ne)) {
+										
+										if (et == EntityType.VEH)
+											valOut.put(ne, 4);
+										else if (et == EntityType.ORG)
+											valOut.put(ne, 3);
+										else if (et == EntityType.LOC)
+											valOut.put(ne, 2);
+										else if (et == EntityType.PER)
+											valOut.put(ne, 1);
+									}									
+								}
+
+							}
+							sb.delete(0, sb.length());
+							et = t.entity_type;
+							if (et != null) {
+								sb.append(t.token);
+								sb.append(" ");
+							}
+						}
+						else if (t.entity_type != null) {
+							sb.append(t.token);
+							sb.append(" ");
+						}
+						else sb.delete(0, sb.length());
+					}
+					if (sb.length() > 0 && et != null) {
+						String ne = sb.toString();
+						if (ne.length() < 50) {
+							if (ne.length() < 50) {
+								if (!valOut.containsKey(ne)) {
+									
+									if (et == EntityType.VEH)
+										valOut.put(ne, 4);
+									else if (et == EntityType.ORG)
+										valOut.put(ne, 3);
+									else if (et == EntityType.LOC)
+										valOut.put(ne, 2);
+									else if (et == EntityType.PER)
+										valOut.put(ne, 1);
+								}									
 							}
 						}
 					}
@@ -238,6 +345,26 @@ public class NEE extends JobConfig implements Tool {
 		}
 		return 0;
 	}
+	
+	// Count entities by days
+		public int phase1variant() throws IOException {
+			Job job = setup(jobName + ": Phase 1 (Typed version)", NEE.class,
+					input, output,
+					ThriftFileInputFormat.class, SequenceFileOutputFormat.class,
+					Text.class, HMapSIW.class,
+					Text.class, HMapSIW.class,
+					Phase1TypedMapper.class, 
+					Reducer.class, reduceNo);
+
+			configureJob(job);
+			try {
+				job.waitForCompletion(true);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return -1;
+			}
+			return 0;
+		}
 
 	// check counts of all entities. By this phase, the final output will be used
 	public int phase2() throws IOException {
@@ -276,6 +403,10 @@ public class NEE extends JobConfig implements Tool {
 
 			else if (phase == 2) {
 				return phase2();
+			}
+			
+			else if (phase == 3) {
+				return phase1variant();
 			}
 
 			else {
