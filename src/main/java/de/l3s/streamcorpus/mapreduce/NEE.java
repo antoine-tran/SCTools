@@ -179,13 +179,13 @@ public class NEE extends JobConfig implements Tool {
 	 * Input : StreamItem doc. Output:
 	 * key=named entity, value = total count
 	 */
-	private static class CountAllMapper extends Mapper<IntWritable, HMapSIW, Text, LongWritable> {
+	private static class CountAllMapper extends Mapper<Text, HMapSIW, Text, LongWritable> {
 
 		private final Text ne = new Text();
 		private final LongWritable cnt = new LongWritable();
 
 		@Override
-		protected void map(IntWritable k, HMapSIW cnts, Context context)
+		protected void map(Text k, HMapSIW cnts, Context context)
 				throws IOException, InterruptedException {
 
 			for (Entry<String> e : cnts.entrySet()) {
