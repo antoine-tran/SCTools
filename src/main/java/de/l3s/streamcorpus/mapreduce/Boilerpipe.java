@@ -378,10 +378,10 @@ public class Boilerpipe extends Configured implements Tool {
 				MyMapper.class, Reducer.class, 
 				args);
 
-		job.getConfiguration().set("mapreduce.map.memory.mb", "1024");
-		job.getConfiguration().set("mapreduce.reduce.memory.mb", "1024");		
-		job.getConfiguration().set("mapreduce.map.java.opts", "-Xmx1024m");
-		job.getConfiguration().set("mapreduce.reduce.java.opts", "-Xmx1024m");
+		job.getConfiguration().set("mapreduce.map.memory.mb", "512");
+		job.getConfiguration().set("mapreduce.reduce.memory.mb", "512");		
+		job.getConfiguration().set("mapreduce.map.java.opts", "-Xmx512m");
+		job.getConfiguration().set("mapreduce.reduce.java.opts", "-Xmx512m");
 		job.getConfiguration().set("mapreduce.job.user.classpath.first", "true");
 
 		try {
