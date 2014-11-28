@@ -6,6 +6,7 @@ import org.apache.thrift.transport.TIOStreamTransport;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
+import de.l3s.boilerpipe.extractors.ArticleExtractor;
 import streamcorpus.ContentItem;
 import streamcorpus.Label;
 import streamcorpus.Sentence;
@@ -33,6 +34,9 @@ public final class ReadThrift {
 		Lingpipe_PER, Lingpipe_ORG, Lingpipe_LOC, Lingpipe_NATIONALITY, Lingpipe_TITLE, Lingpipe_MISC}; 
 	
 	public static void main(String[] args) {
+		
+		ArticleExtractor ae = ArticleExtractor.INSTANCE;
+		
 		// System.out.println(INDEXABLE.Lemma.toString());
 		try {
 			// File transport magically doesn't work
@@ -55,19 +59,21 @@ public final class ReadThrift {
 					for (String k : keys) System.out.print("\t" + k + "-" + item.getOther_content().get(k).getSentencesSize());
 					System.out.println();
 					System.out.println("Keys in body:");
-					keys = item.getBody().getSentences().keySet();
-					for (String k : keys) {
-						System.out.print("\t" + k);
-						if (item.getBody().getSentences().get(k).size() > 0)
-						for (Sentence s : item.getBody().getSentences().get(k)) {							
-							for (Token t : s.tokens) {
-								System.out.print(t.token + '(' + t.entity_type + ") ");
-							}
-							System.out.print(". ");
-						}						
-						System.out.println();
-					}	
 					
+					keys = item.getBody().getSentences().keySet();
+					System.out.println(item.getBody().clean_html);
+					System.out.println(ae.getText(item.getBody().clean_html));
+					/*for (String k : keys) {
+						System.out.print("\t" + k + " " + k.length());
+						if (item.getBody().getSentences().get(k).size() > 0)
+						for (Sentence s : item.getBody().getSentences().get(k)) {	
+							for (Token t : s.tokens) {								
+								System.out.print(t.token + '(' + t.sentence_pos + ") ");
+							}
+							System.out.println(". ");
+						}													
+						System.out.println();
+					}*/
 				} catch (TTransportException e) {
 					int type = e.getType();
 					if (type == TTransportException.END_OF_FILE) {
