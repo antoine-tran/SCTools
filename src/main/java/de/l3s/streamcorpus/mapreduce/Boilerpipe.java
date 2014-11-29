@@ -234,10 +234,11 @@ public class Boilerpipe extends Configured implements Tool {
 			fs.delete(op, true);
 		}
 		
-		log.info("Reading .sc file list");
+		/*log.info("Reading .sc file list");
 		for (String line : FileUtility.readLines(input)) {
 			FileInputFormat.addInputPath(job, new Path(line));
-		}
+		}*/
+		FileInputFormat.setInputPaths(job, new Path(input));
 
 		FileOutputFormat.setOutputPath(job, op);
 
