@@ -155,6 +155,21 @@
 					</execution>
 					<execution>
 						<phase>validate</phase>
+						<id>install-latest-boilerpipe</id>
+						<configuration>
+							<file>${project.basedir}/ivy/local-lib/boilerpipe-1.2.1.jar</file>
+							<groupId>de.l3s.boilerpipe</groupId>
+							<artifactId>boilerpipe</artifactId>
+							<version>1.2.1</version>
+							<packaging>jar</packaging>
+							<generatePom>true</generatePom>
+						</configuration>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+					</execution>
+					<execution>
+						<phase>validate</phase>
 						<id>install-hpc-utils</id>
 						<configuration>
 							<file>${project.basedir}/ivy/local-lib/dexter/hpc-utils-0.0.7.jar</file>
@@ -703,7 +718,7 @@
 		<dependency>
 			<groupId>de.l3s.boilerpipe</groupId>
 			<artifactId>boilerpipe</artifactId>
-			<version>1.1.0</version>
+			<version>1.2.1</version>
 		</dependency>
 
 

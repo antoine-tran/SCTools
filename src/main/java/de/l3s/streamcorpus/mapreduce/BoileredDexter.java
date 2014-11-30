@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import ilps.hadoop.StreamItemWritable;
-import ilps.hadoop.ThriftFileInputFormat;
 import it.cnr.isti.hpc.dexter.StandardTagger;
 import it.cnr.isti.hpc.dexter.Tagger;
 import it.cnr.isti.hpc.dexter.common.Field;
@@ -29,18 +27,21 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.l3s.boilerpipe.BoilerpipeProcessingException;
-import de.l3s.boilerpipe.extractors.ArticleExtractor;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import tuan.hadoop.conf.JobConfig;
 import tuan.terrier.Files;
 import tuan.terrier.HadoopDistributedFileSystem;
@@ -66,7 +67,7 @@ public class BoileredDexter extends JobConfig implements Tool {
 
 	/** Output: */
 	private static final class MyMapper 
-	extends Mapper<Text, StreamItemWritable, Text, Text> {
+	extends Mapper<LongWritable, Text, Text, Text> {
 
 		private final Text keyOut = new Text();
 		private final Text neds = new Text();
@@ -79,7 +80,7 @@ public class BoileredDexter extends JobConfig implements Tool {
 		private boolean addWikinames;
 		private Integer entitiesToAnnotate;
 		private double minConfidence;
-		private ArticleExtractor ae = null; 
+		private Gson gson;
 		private String ned;
 
 		@Override
@@ -115,31 +116,22 @@ public class BoileredDexter extends JobConfig implements Tool {
 			entitiesToAnnotate = new Integer(50);
 			minConfidence = Double.parseDouble("0.1");
 			
-			ae = ArticleExtractor.INSTANCE;
+			gson = new GsonBuilder().create();
 		}
 
 		@Override
-		protected void map(Text key, StreamItemWritable item, Context context)
+		protected void map(LongWritable key, Text item, Context context)
 				throws IOException, InterruptedException {
-			String docId = item.getDoc_id();
+			String text = item.toString();
+			int i = text.indexOf('\t');
+			
+			String docId = text.substring(0,i);
 			keyOut.set(docId);
 			// neds.clear();
 
-			if (item.getBody() == null || item.getBody().getClean_visible() == null ||
-					item.getBody().getClean_visible().isEmpty()) {
-				return;
-			}
-
-			// String text = item.getBody().getClean_visible();
-			String text = item.getBody().getClean_html();
-			try {
-				text = ae.getText(text);
-			} catch (BoilerpipeProcessingException e) {
-				LOG.warn("Cannot use boilerpipe with text in doc " + docId 
-						+ ". Use everything instead");
-				text = item.getBody().getClean_visible();
-			}
-			
+			text = text.substring(i+1);
+			text = gson.fromJson(text, String.class);
+						
 			MultifieldDocument doc = parseDocument(text, "text");		
 
 			EntityMatchList eml = tagger.tag(new DexterLocalParams(), doc);
@@ -190,7 +182,7 @@ public class BoileredDexter extends JobConfig implements Tool {
 	@Override
 	public int run(String[] args) throws Exception {
 		System.out.println(args.length);
-		Job job = setup(ThriftFileInputFormat.class, TextOutputFormat.class,
+		Job job = setup(TextInputFormat.class, TextOutputFormat.class,
 				Text.class, Text.class,//IntFloatArrayListWritable.class,
 				Text.class, Text.class,//IntFloatArrayListWritable.class,
 				MyMapper.class, Reducer.class, 
