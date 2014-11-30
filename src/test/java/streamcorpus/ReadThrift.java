@@ -6,21 +6,18 @@ import org.apache.thrift.transport.TIOStreamTransport;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 
-import de.l3s.boilerpipe.extractors.ArticleExtractor;
-import streamcorpus.ContentItem;
-import streamcorpus.Label;
-import streamcorpus.Sentence;
+import edu.stanford.nlp.ie.AbstractSequenceClassifier;
+import edu.stanford.nlp.ie.crf.CRFClassifier;
+import edu.stanford.nlp.ling.CoreAnnotations;
+import edu.stanford.nlp.ling.CoreLabel;
 import streamcorpus.StreamItem;
-import streamcorpus.Token;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.nio.ByteBuffer;
-import java.util.Collection;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.zip.GZIPInputStream;
 
 /**
  * User: jacek
@@ -33,9 +30,13 @@ public final class ReadThrift {
 		Serif_PER, Serif_ORG, Serif_LOC, Serif_NATIONALITY, Serif_TITLE, Serif_MISC,
 		Lingpipe_PER, Lingpipe_ORG, Lingpipe_LOC, Lingpipe_NATIONALITY, Lingpipe_TITLE, Lingpipe_MISC}; 
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ClassCastException, ClassNotFoundException, IOException {
 		
-		ArticleExtractor ae = ArticleExtractor.INSTANCE;
+		// ArticleExtractor ae = ArticleExtractor.INSTANCE;
+		
+		GZIPInputStream serializedClassifier = new GZIPInputStream(new BufferedInputStream(new FileInputStream("/home/tuan/Developer/eclipses/eclipse-workspace-standard/event-converter/src/"
+				+ "main/resources/stanford-ner/classifiers/conll.4class.distsim.crf.ser.gz")));
+		AbstractSequenceClassifier<CoreLabel> classifier = (AbstractSequenceClassifier<CoreLabel>) CRFClassifier.getClassifier(serializedClassifier);
 		
 		// System.out.println(INDEXABLE.Lemma.toString());
 		try {
@@ -61,8 +62,19 @@ public final class ReadThrift {
 					System.out.println("Keys in body:");
 					
 					keys = item.getBody().getSentences().keySet();
-					System.out.println(item.getBody().clean_html);
-					System.out.println(ae.getText(item.getBody().clean_html));
+					
+					String text = item.getBody().clean_visible;
+					
+					List<List<CoreLabel>> out = classifier.classify(text);
+				      for (List<CoreLabel> sentence : out) {
+				        for (CoreLabel word : sentence) {
+				          System.out.print(word.word() + '/' + word.get(CoreAnnotations.AnswerAnnotation.class) + ' ');
+				        }
+				        System.out.println();
+				      }
+					
+					// System.out.println(item.getBody().clean_html);
+					// System.out.println(ae.getText(item.getBody().clean_html));
 					/*for (String k : keys) {
 						System.out.print("\t" + k + " " + k.length());
 						if (item.getBody().getSentences().get(k).size() > 0)
@@ -74,6 +86,9 @@ public final class ReadThrift {
 						}													
 						System.out.println();
 					}*/
+					
+					
+					
 				} catch (TTransportException e) {
 					int type = e.getType();
 					if (type == TTransportException.END_OF_FILE) {

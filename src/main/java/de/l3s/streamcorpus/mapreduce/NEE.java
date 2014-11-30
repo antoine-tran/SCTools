@@ -13,11 +13,14 @@ import ilps.hadoop.ThriftFileInputFormat;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
+import org.apache.commons.io.output.NullWriter;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
@@ -28,6 +31,9 @@ import org.apache.hadoop.util.ToolRunner;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import de.l3s.lemma.lemma;
+import edu.stanford.nlp.ling.tokensregex.MultiWordStringMatcher;
+import edu.stanford.nlp.ling.tokensregex.MultiWordStringMatcher.MatchType;
 import edu.umd.cloud9.io.map.HMapSIW;
 import edu.umd.cloud9.util.map.MapKI.Entry;
 import streamcorpus.EntityType;
@@ -204,7 +210,7 @@ public class NEE extends JobConfig implements Tool {
 								// ignore too long strings
 								if (ne.length() < 50) {
 									if (!valOut.containsKey(ne)) {
-										
+
 										if (et == EntityType.VEH)
 											valOut.put(ne, 4);
 										else if (et == EntityType.ORG)
@@ -235,7 +241,7 @@ public class NEE extends JobConfig implements Tool {
 						if (ne.length() < 50) {
 							if (ne.length() < 50) {
 								if (!valOut.containsKey(ne)) {
-									
+
 									if (et == EntityType.VEH)
 										valOut.put(ne, 4);
 									else if (et == EntityType.ORG)
@@ -279,6 +285,63 @@ public class NEE extends JobConfig implements Tool {
 			}
 			context.write(key, valOut);
 		}
+	}
+
+	/** 
+	 * Convert all terms to LNRM and build the lemmas for matching against Freebase
+	 * Input : StreamItem doc. Output:
+	 * key=named entity, value = total count
+	 */
+	private static class NormalizeMapper extends Mapper<Text, HMapSIW, Text, Text> {
+
+		private final Text keyOut = new Text();
+		private final Text valOut = new Text();
+
+		private MultiWordStringMatcher matcher;
+
+		@Override
+		protected void setup(Context context) throws IOException,
+		InterruptedException {
+			matcher = new MultiWordStringMatcher(MatchType.LNRM);
+			lemma.init();
+		}
+
+		@Override
+		protected void map(Text k, HMapSIW cnts, Context context)
+				throws IOException, InterruptedException {
+
+			for (Entry<String> e : cnts.entrySet()) {
+				String ent = e.getKey();
+				String normalized = matcher.getLnrmRegex(lemma.getLemmatization(ent)).toLowerCase();
+				keyOut.set(ent);
+				valOut.set(normalized);
+				context.write(keyOut, valOut);
+			}
+		}
+	}
+
+	private static class NormalizeReducer extends Reducer<Text, Text, Text, Text> {
+
+		private Text valOut = null;
+
+		@Override
+		protected void reduce(Text k, Iterable<Text> vals, Context c)
+				throws IOException, InterruptedException {
+
+			boolean first = true;
+
+			// emit the first pair and stop
+			for (Text v : vals) {
+				if (first) {
+					valOut = v;
+					first = false;
+				}
+				else break;				
+			}
+
+			if (valOut != null)
+				c.write(k, valOut);
+		}		
 	}
 
 	/** 
@@ -345,26 +408,26 @@ public class NEE extends JobConfig implements Tool {
 		}
 		return 0;
 	}
-	
-	// Count entities by days
-		public int phase1variant() throws IOException {
-			Job job = setup(jobName + ": Phase 1 (Typed version)", NEE.class,
-					input, output,
-					ThriftFileInputFormat.class, SequenceFileOutputFormat.class,
-					Text.class, HMapSIW.class,
-					Text.class, HMapSIW.class,
-					Phase1TypedMapper.class, 
-					Reducer.class, reduceNo);
 
-			configureJob(job);
-			try {
-				job.waitForCompletion(true);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return -1;
-			}
-			return 0;
+	// Count entities by days
+	public int phase1variant() throws IOException {
+		Job job = setup(jobName + ": Phase 1 (Typed version)", NEE.class,
+				input, output,
+				ThriftFileInputFormat.class, SequenceFileOutputFormat.class,
+				Text.class, HMapSIW.class,
+				Text.class, HMapSIW.class,
+				Phase1TypedMapper.class, 
+				Reducer.class, reduceNo);
+
+		configureJob(job);
+		try {
+			job.waitForCompletion(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
 		}
+		return 0;
+	}
 
 	// check counts of all entities. By this phase, the final output will be used
 	public int phase2() throws IOException {
@@ -375,6 +438,25 @@ public class NEE extends JobConfig implements Tool {
 				Text.class, LongWritable.class,
 				CountAllMapper.class, 
 				LongSumReducer.class, LongSumReducer.class, reduceNo);
+		configureJob(job);
+		try {
+			job.waitForCompletion(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return 0;
+	}
+
+	// check counts of all entities. By this phase, the final output will be used
+	public int phase3() throws IOException {
+		Job job = setup(jobName + ": Phase 4", NEE.class,
+				output, command.getOptionValue(COUNT_ENTITIES_ALL_OPT),
+				SequenceFileInputFormat.class, TextOutputFormat.class,
+				Text.class, Text.class,
+				Text.class, LongWritable.class,
+				NormalizeMapper.class, 
+				NormalizeReducer.class, NormalizeReducer.class, reduceNo);
 		configureJob(job);
 		try {
 			job.waitForCompletion(true);
@@ -404,9 +486,13 @@ public class NEE extends JobConfig implements Tool {
 			else if (phase == 2) {
 				return phase2();
 			}
-			
+
 			else if (phase == 3) {
 				return phase1variant();
+			}
+			
+			else if (phase == 4) {
+				return phase3();
 			}
 
 			else {

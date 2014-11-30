@@ -607,12 +607,24 @@
 			<artifactId>commons-cli</artifactId>
 			<version>1.2</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>edu.stanford.nlp</groupId>
+			<artifactId>stanford-corenlp</artifactId>
+			<version>1.3.4</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.jodd</groupId>
 			<artifactId>jodd</artifactId>
 			<version>3.2.6</version>
 		</dependency>
+		
+		<dependency>
+  		<groupId>de.l3s.gtran</groupId>
+  		<artifactId>lemmatization</artifactId>
+    	 <version>1.0</version>
+  	</dependency>
 
 		<dependency>
 			<groupId>com.moparisthebest</groupId>
@@ -768,6 +780,15 @@
 	</dependencies>
 
 	<repositories>
+		<repository>
+      <id>gtran</id>
+      <name>gtran mvn repo</name>
+      <url>https://raw.githubusercontent.com/giangbinhtran/thirdparty/master/</url>
+      <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+        </snapshots>
+    </repository>
 		<repository>
 			<id>antoine-tran-github-releases</id>
 			<name>Tuan Tran's Personal Repository for Maven</name>
