@@ -13,14 +13,10 @@ import ilps.hadoop.ThriftFileInputFormat;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
-import org.apache.commons.io.output.NullWriter;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
@@ -28,8 +24,6 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.mapreduce.lib.reduce.LongSumReducer;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import de.l3s.lemma.lemma;
 import edu.stanford.nlp.ling.tokensregex.MultiWordStringMatcher;
@@ -45,8 +39,6 @@ import tuan.hadoop.conf.JobConfig;
  * Extract named entities from the StreamCorpus at large (grouped by or not by time)
  * */
 public class NEE extends JobConfig implements Tool {
-
-	private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("YYYYMMdd");
 
 	private static final String MAPPER_SIZE = "-Xmx1024m"; 
 
@@ -66,9 +58,6 @@ public class NEE extends JobConfig implements Tool {
 		@Override
 		protected void map(Text key, StreamItemWritable item, Context context)
 				throws IOException, InterruptedException {
-			// This is just to test. The date value can easily be parsed from the file path
-			long ts = (long) item.getStream_time().getEpoch_ticks();										
-			int dateVal = Integer.parseInt(dtf.print((ts * 1000)));
 			//keyOut.set(dateVal);
 			keyOut.set(item.getDoc_id());
 			valOut.clear();
@@ -169,10 +158,6 @@ public class NEE extends JobConfig implements Tool {
 		@Override
 		protected void map(Text key, StreamItemWritable item, Context context)
 				throws IOException, InterruptedException {
-			// This is just to test. The date value can easily be parsed from the file path
-			long ts = (long) item.getStream_time().getEpoch_ticks();										
-			int dateVal = Integer.parseInt(dtf.print((ts * 1000)));
-			//keyOut.set(dateVal);
 			keyOut.set(item.getDoc_id());
 			valOut.clear();
 
@@ -185,7 +170,6 @@ public class NEE extends JobConfig implements Tool {
 			if (keys == null || keys.isEmpty()) return;
 
 			// Get the first annotated sentence, most likely Serif
-			String k = null;
 			Iterator<String> keyIter = keys.iterator();
 
 			while (keyIter.hasNext()) {
@@ -255,35 +239,8 @@ public class NEE extends JobConfig implements Tool {
 						}
 					}
 				}
-
-				k = annot;
 			}
 			context.write(keyOut, valOut);
-		}
-	}
-
-	private static class Phase1Reducer extends Reducer<IntWritable, HMapSIW, IntWritable, HMapSIW> {
-
-		private final HMapSIW valOut = new HMapSIW();
-
-		@Override
-		protected void reduce(IntWritable key, Iterable<HMapSIW> cnts, Context context)
-				throws IOException, InterruptedException {
-
-			valOut.clear();
-			for (HMapSIW cnt : cnts) {
-				for (Entry<String> e : cnt.entrySet()) {
-					String n = e.getKey();
-					if (!valOut.containsKey(n)) {
-						valOut.put(n, e.getValue());
-					}
-					else {
-						int c = valOut.get(n);
-						valOut.put(n, c + e.getValue());
-					}
-				}
-			}
-			context.write(key, valOut);
 		}
 	}
 
@@ -313,9 +270,57 @@ public class NEE extends JobConfig implements Tool {
 			for (Entry<String> e : cnts.entrySet()) {
 				String ent = e.getKey();
 				String normalized = matcher.getLnrmRegex(lemma.getLemmatization(ent)).toLowerCase();
+				
+				int i = -1;
+				if (normalized.charAt(i+1) == '('	&& normalized.charAt(i+2) == '?' 
+						&& normalized.charAt(i+3) == 'u' && normalized.charAt(i+4) == ')'
+						&& normalized.charAt(i+5) == '(' && normalized.charAt(i+6) == '?'
+						&& normalized.charAt(i+7) == 'i' && normalized.charAt(i+8) == ')') {
+					i = i + 8;
+				}
+				
+				if (i >= 0) {
+					normalized = normalized.substring(i+1);
+				}
+				if (normalized.isEmpty()) {
+					return;
+				}
+				
 				keyOut.set(ent);
 				valOut.set(normalized);
 				context.write(keyOut, valOut);
+			}
+		}
+	}
+
+	/** 
+	 * Convert all terms to LNRM and build the lemmas for matching against Freebase, while still keeping
+	 * the doc id / entity mapping
+	 * Input : StreamItem doc. Output:
+	 * key=named entity, value = total count
+	 */
+	private static class Normalize1Mapper extends Mapper<Text, HMapSIW, Text, Text> {
+
+		private final Text valOut = new Text();
+
+		private MultiWordStringMatcher matcher;
+
+		@Override
+		protected void setup(Context context) throws IOException,
+		InterruptedException {
+			matcher = new MultiWordStringMatcher(MatchType.LNRM);
+			lemma.init();
+		}
+
+		@Override
+		protected void map(Text k, HMapSIW cnts, Context context)
+				throws IOException, InterruptedException {
+
+			for (Entry<String> e : cnts.entrySet()) {
+				String ent = e.getKey();
+				String normalized = matcher.getLnrmRegex(lemma.getLemmatization(ent)).toLowerCase();
+				valOut.set(ent + "\t" + normalized + "\t" + e.getValue());				
+				context.write(k, valOut);
 			}
 		}
 	}
@@ -450,13 +455,32 @@ public class NEE extends JobConfig implements Tool {
 
 	// check counts of all entities. By this phase, the final output will be used
 	public int phase3() throws IOException {
-		Job job = setup(jobName + ": Phase 4", NEE.class,
+		Job job = setup(jobName + ": Phase 3", NEE.class,
 				output, command.getOptionValue(COUNT_ENTITIES_ALL_OPT),
 				SequenceFileInputFormat.class, TextOutputFormat.class,
 				Text.class, Text.class,
 				Text.class, LongWritable.class,
 				NormalizeMapper.class, 
 				NormalizeReducer.class, NormalizeReducer.class, reduceNo);
+		configureJob(job);
+		try {
+			job.waitForCompletion(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
+		}
+		return 0;
+	}
+
+	// check counts of all entities. By this phase, the final output will be used
+	public int phase5() throws IOException {
+		Job job = setup(jobName + ": Phase 5", NEE.class,
+				output, command.getOptionValue(COUNT_ENTITIES_ALL_OPT),
+				SequenceFileInputFormat.class, TextOutputFormat.class,
+				Text.class, Text.class,
+				Text.class, LongWritable.class,
+				Normalize1Mapper.class, 
+				Reducer.class, Reducer.class, reduceNo);
 		configureJob(job);
 		try {
 			job.waitForCompletion(true);
@@ -490,9 +514,13 @@ public class NEE extends JobConfig implements Tool {
 			else if (phase == 3) {
 				return phase1variant();
 			}
-			
+
 			else if (phase == 4) {
 				return phase3();
+			}
+			
+			else if (phase == 5) {
+				return phase5();
 			}
 
 			else {

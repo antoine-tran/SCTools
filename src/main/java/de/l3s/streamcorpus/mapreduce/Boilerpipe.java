@@ -51,7 +51,7 @@ public class Boilerpipe extends Configured implements Tool {
 
 	private static final Logger log = LoggerFactory.getLogger(Boilerpipe.class);
 	
-	private String mapperSize = "-Xmx1024m"; 
+	private String mapperSize = "-Xmx4096m"; 
 
 	public static final String INPUT_OPT = "in";
 	public static final String OUTPUT_OPT = "out";
@@ -217,11 +217,7 @@ public class Boilerpipe extends Configured implements Tool {
 				"mapreduce.map.tasks.speculative.execution", false);
 		job.getConfiguration().setBoolean(
 				"mapreduce.reduce.tasks.speculative.execution", false);
-
-
-		// Option: Java heap space
-		job.getConfiguration().set("mapreduce.child.java.opts", mapperSize);
-		job.getConfiguration().set("mapred.child.java.opts", mapperSize);
+		
 
 		setCompressOption(job);
 
@@ -379,10 +375,10 @@ public class Boilerpipe extends Configured implements Tool {
 				MyMapper.class, Reducer.class, 
 				args);
 
-		job.getConfiguration().set("mapreduce.map.memory.mb", "2048");
-		job.getConfiguration().set("mapreduce.reduce.memory.mb", "2048");		
-		job.getConfiguration().set("mapreduce.map.java.opts", "-Xmx2048m");
-		job.getConfiguration().set("mapreduce.reduce.java.opts", "-Xmx2048m");
+		job.getConfiguration().set("mapreduce.map.memory.mb", "4096");
+		job.getConfiguration().set("mapreduce.reduce.memory.mb", "8192");		
+		job.getConfiguration().set("mapreduce.map.java.opts", "-Xmx4096m");
+		job.getConfiguration().set("mapreduce.reduce.java.opts", "-Xmx6144m");
 		job.getConfiguration().set("mapreduce.job.user.classpath.first", "true");
 
 		try {
