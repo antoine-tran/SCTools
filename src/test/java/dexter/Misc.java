@@ -12,15 +12,17 @@ public class Misc {
 
 	public static void main(String[] args) {
 		
-		lemma.init();
+		//lemma.init();
 		
-		String s = new MultiWordStringMatcher(MatchType.LNRM).getLnrmRegex(lemma.getLemmatization("Alice MOVIEs, % $:<'          "));
-		/* 360 */     System.out.println(s);
-		/* 361 */     String x = new MultiWordStringMatcher(MatchType.LNRM).getLnrmRegex(lemma.getLemmatization("alicemovie"));
-		/* 362 */     System.out.println(x);
-		/* 363 */     Pattern p = Pattern.compile(s);
-		/* 364 */     Matcher m = p.matcher("alice_(movie)");
-		/* 365 */     System.out.println(m.matches());
-		/* 366 */     System.out.println(m.find());	
+		/*String s = new MultiWordStringMatcher(MatchType.LNRM).getLnrmRegex(lemma.getLemmatization("Alice MOVIEs, % $:<'          "));
+		 System.out.println(s);
+		    String x = new MultiWordStringMatcher(MatchType.LNRM).getLnrmRegex(lemma.getLemmatization("alicemovie"));
+	System.out.println(x);
+	     Pattern p = Pattern.compile(s);
+		 Matcher m = p.matcher("alice_(movie)");
+		     System.out.println(m.matches());
+	    System.out.println(m.find()); 	*/
+		
+		System.out.println('8'-'0');
 	}
 }

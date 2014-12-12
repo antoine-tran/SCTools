@@ -343,7 +343,8 @@ public class Boilerpipe extends Configured implements Tool {
 		@Override
 		protected void map(Text key, StreamItemWritable item, Context context)
 				throws IOException, InterruptedException {
-			String docId = item.getDoc_id();
+			//String docId = item.getDoc_id();
+			String docId = item.getStream_id();
 			keyOut.set(docId);
 			// neds.clear();
 

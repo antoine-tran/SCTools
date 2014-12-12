@@ -54,41 +54,42 @@ public final class ReadThrift {
 					item.read(protocol);
 					System.out.println("counter = " + ++counter);
 					System.out.println("docID = " + item.getDoc_id() + ", streamID = " + item.getStream_id() + ", " + item.getStream_time().toString());
-					System.out.print("Keys in other_content:");
+					// System.out.print("Keys in other_content:");
 					
-					Set<String> keys = item.getOther_content().keySet();
+					/*Set<String> keys = item.getOther_content().keySet();
 					for (String k : keys) System.out.print("\t" + k + "-" + item.getOther_content().get(k).getSentencesSize());
-					System.out.println();
+					System.out.println("Title: " + item.getOther_content().get("title"));
 					System.out.println("Keys in body:");
 					
-					keys = item.getBody().getSentences().keySet();
-					
-					String text = item.getBody().clean_visible;
-					
-					List<List<CoreLabel>> out = classifier.classify(text);
+					keys = item.getBody().getSentences().keySet();*/
+										
+					/*List<List<CoreLabel>> out = classifier.classify(text);
 				      for (List<CoreLabel> sentence : out) {
 				        for (CoreLabel word : sentence) {
 				          System.out.print(word.word() + '/' + word.get(CoreAnnotations.AnswerAnnotation.class) + ' ');
 				        }
 				        System.out.println();
-				      }
+				      }*/
 					
 					// System.out.println(item.getBody().clean_html);
 					// System.out.println(ae.getText(item.getBody().clean_html));
+					
+					
 					/*for (String k : keys) {
-						System.out.print("\t" + k + " " + k.length());
+						System.out.print("\t" + k + " " + k.length() + "\t:");
 						if (item.getBody().getSentences().get(k).size() > 0)
 						for (Sentence s : item.getBody().getSentences().get(k)) {	
 							for (Token t : s.tokens) {								
 								System.out.print(t.token + '(' + t.sentence_pos + ") ");
 							}
 							System.out.println(". ");
+							break;
 						}													
 						System.out.println();
 					}*/
 					
 					
-					
+					break;
 				} catch (TTransportException e) {
 					int type = e.getType();
 					if (type == TTransportException.END_OF_FILE) {
