@@ -54,6 +54,7 @@ public final class ReadThrift {
 					item.read(protocol);
 					System.out.println("counter = " + ++counter);
 					System.out.println("docID = " + item.getDoc_id() + ", streamID = " + item.getStream_id() + ", " + item.getStream_time().toString());
+					System.out.println(new String(item.abs_url.array(), "UTF-8"));
 					// System.out.print("Keys in other_content:");
 					
 					/*Set<String> keys = item.getOther_content().keySet();

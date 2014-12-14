@@ -1,0 +1,1 @@
+LANG=en_EN join -1 2 -2 3 -t$'\t' scores.lnrm.sort1 stanford.sort |  awk -F $'\t' '{for(i=1;i<=NF;i++){if (i!=5)printf "%s",$i (i==NF?ORS:OFS);}}' > stanford.freebase
