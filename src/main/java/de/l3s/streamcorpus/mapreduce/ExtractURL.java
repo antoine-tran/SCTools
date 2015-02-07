@@ -66,7 +66,7 @@ public class ExtractURL extends JobConfig implements Tool {
 		System.out.println("Option passed.");
 		setMapperSize(MAPPER_SIZE);
 		System.out.println("Mapper size set.");
-		Job job = setup(jobName, ExtractTitle.class,
+		Job job = setup(jobName, ExtractURL.class,
 				input, output,
 				ThriftFileInputFormat.class, TextOutputFormat.class,
 				Text.class, Text.class,
